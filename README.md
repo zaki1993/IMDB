@@ -1,1 +1,3 @@
 # IMDB
+The Internet Movie Database (abbreviated IMDb) is an online database of information related to films, television programs and video games, including cast, production crew, fictional characters, biographies and plot summaries.
+The site enables registered users to rate any film on a scale of 1 to 10, and the totals are converted into a weighted mean-rating that is displayed beside each title. The site also featured comment boards which stimulate regular debates among users.

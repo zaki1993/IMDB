@@ -29,17 +29,17 @@ public class User implements IUser{
 	
 	@Override
 	public boolean vote(Movie toRate, int vote) {
-		if (toRate == null || (vote < 0 || vote > 10)) {
-			
-		}
-		toRate.rate(vote);
-		return true;
+		return (toRate == null) ? false : toRate.rate(vote);
 	}
 	
 	@Override
 	public boolean comment(Post post, String msg) {
 		if (post == null) {
 			System.out.println("No such post!");
+			return false;
+		}
+		if(msg == null || msg.isEmpty()){
+			System.out.println("No valid comment!");
 			return false;
 		}
 		post.addComment(this, msg);

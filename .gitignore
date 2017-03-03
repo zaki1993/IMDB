@@ -1,7 +1,4 @@
 *.class
-*.project
-*.classpath
-.metadata
 /bin/
 
 # Mobile Tools for Java (J2ME)

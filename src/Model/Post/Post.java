@@ -1,5 +1,4 @@
-package Post;
-
+package Model.Post;
 import java.util.ArrayList;
 
 import Model.Movie.*;

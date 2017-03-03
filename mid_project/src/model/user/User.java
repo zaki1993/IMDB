@@ -8,11 +8,10 @@ import model.post.Post;
 public class User implements IUser{
 	private String name;
 	private byte age;
-	private String location; // Предлагам за сега да е стринг, а след това може да вземем файл с градове и да избира някой от тях
+	private String location;
 	private HashSet<Movie> watchList;
 	
-	public User(String name, byte age, String location) {
-		super();
+	private User(String name, byte age, String location) {//don't want ppl able to create users
 		this.name = name;
 		this.age = age;
 		this.location = location;
@@ -22,11 +21,10 @@ public class User implements IUser{
 	public String getName() {
 		return name;
 	}
-
-	@Override
-	public boolean register() {
-		// TODO Auto-generated method stub
-		return false;
+	
+	public static User register(String name, byte age, String location) {
+		User newUser = new User(name, age, location);
+		return newUser;
 	}
 	
 	@Override

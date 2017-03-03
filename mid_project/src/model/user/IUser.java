@@ -4,10 +4,9 @@ import model.movie.Movie;
 import model.post.Post;
 
 public interface IUser {
-	// Не съм добавил параметрите все още
-	// boolean за да проверяваме дали методите са били успешно изпълнени
-	public boolean register();
-	public boolean vote(Movie toRate);
-	public boolean comment(Post post);
+	//boolean methods so we can check for success
+	//removed register to make it static
+	boolean vote(Movie toRate);
+	boolean comment(Post post);
 	boolean addToWatchList(Movie toAdd);
 }

@@ -12,6 +12,10 @@ public class User implements IUser{
 		this.location = location;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
 	@Override
 	public boolean register() {
 		// TODO Auto-generated method stub

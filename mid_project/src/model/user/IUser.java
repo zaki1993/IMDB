@@ -6,7 +6,7 @@ import model.post.Post;
 public interface IUser {
 	//boolean methods so we can check for success
 	//removed register to make it static
-	boolean vote(Movie toRate);
-	boolean comment(Post post);
+	boolean vote(Movie toRate, int vote);
+	boolean comment(Post post, String msg);
 	boolean addToWatchList(Movie toAdd);
 }

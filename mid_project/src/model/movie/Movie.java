@@ -9,7 +9,8 @@ public class Movie {
 	private static int id = 0;
 	private String name;
 	private String poster;
-	private String genre;
+	private HashSet<String> genre; //can have more then 1
+	private int voters;
 	private double rating;
 	private HashSet<Actor> actors;
 	private HashSet<Director> directors;
@@ -17,13 +18,14 @@ public class Movie {
 	private LocalDate date;
 	private int idx;
 	
-	public Movie(String name, String poster, String genre, double rating, HashSet<Actor> actors,
+	public Movie(String name, String poster, String[] genres, HashSet<Actor> actors,
 			HashSet<Director> scenaristi, String description, LocalDate date) {
-		super();
 		this.name = name;
 		this.poster = poster;
-		this.genre = genre;
-		this.rating = rating;
+		for (String genre : genres) {
+			this.genre.add(genre);
+		}
+		this.rating = 0;
 		this.actors = actors;
 		this.directors = scenaristi;
 		this.description = description;
@@ -39,8 +41,8 @@ public class Movie {
 		return poster;
 	}
 
-	public String getGenre() {
-		return genre;
+	public HashSet<String> getGenre() {
+		return (HashSet<String>) Collections.unmodifiableCollection(this.genre);
 	}
 
 	public double getRating() {
@@ -62,4 +64,16 @@ public class Movie {
 	public LocalDate getDate() {
 		return date;
 	}
+
+	public boolean rate(int vote) {
+		if (vote < 0 || vote > 10) {
+			return false;
+		} 
+		double ratingAvr = this.rating * this.voters;
+		ratingAvr += vote;
+		this.voters++;
+		rating = ratingAvr / voters;
+		return true;
+	}
+	
 }

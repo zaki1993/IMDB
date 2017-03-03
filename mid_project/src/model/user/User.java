@@ -28,15 +28,22 @@ public class User implements IUser{
 	}
 	
 	@Override
-	public boolean vote(Movie toRate) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean vote(Movie toRate, int vote) {
+		if (toRate == null || (vote < 0 || vote > 10)) {
+			
+		}
+		toRate.rate(vote);
+		return true;
 	}
 	
 	@Override
-	public boolean comment(Post post) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean comment(Post post, String msg) {
+		if (post == null) {
+			System.out.println("No such post!");
+			return false;
+		}
+		post.addComment(this, msg);
+		return true;
 	}
 	
 	@Override

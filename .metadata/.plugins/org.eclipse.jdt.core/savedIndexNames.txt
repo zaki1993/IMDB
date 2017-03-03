@@ -1,2 +1,0 @@
-INDEX VERSION 1.129+/home/streetzaki/Programming/github/IMDB/.metadata/.plugins/org.eclipse.jdt.core
-388688977.index

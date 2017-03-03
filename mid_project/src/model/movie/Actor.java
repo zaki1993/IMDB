@@ -1,4 +1,4 @@
-package Model.Movie;
+package model.movie;
 
 import java.util.HashSet;
 

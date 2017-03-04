@@ -27,5 +27,13 @@ public abstract class Artist {
 		return (HashSet<Movie>) Collections.unmodifiableCollection(this.movies);
 	}
 	
+	@Override
+	public String toString() {
+		String result = "[";
+		result += name + ", " + age;
+		result += "]";
+		return super.toString();
+	}
+	
 }
 

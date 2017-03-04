@@ -22,6 +22,7 @@ public class Movie {
 			HashSet<Director> scenaristi, String description, LocalDate date) {
 		this.name = name;
 		this.poster = poster;
+		this.genre = new HashSet<>();
 		for (String genre : genres) {
 			this.genre.add(genre);
 		}
@@ -74,6 +75,47 @@ public class Movie {
 		this.voters++;
 		rating = ratingAvr / voters;
 		return true;
+	}
+	@Override
+	public String toString() {
+		String result = "[";
+		result += this.name + ", ";
+		result += this.poster + ", ";
+		if(this.genre != null){
+			result += "[";
+			for(String i : this.genre){
+				result += i + " ";
+			}
+			result += "], ";
+		}
+		else{
+			result += null + ", ";
+		}
+		result += this.rating + ", ";
+		if(this.actors != null){
+			result += ", [";
+			for(Actor i : this.actors){
+				result += i.toString() + " ";
+			}
+			result += "], ";
+		}
+		else{
+			result += null + ", ";
+		}
+		if(this.directors != null){
+			result += "[";
+			for(Director i : this.directors){
+				result += i.toString() + " ";
+			}
+			result += "], ";
+		}
+		else{
+			result += null + ", ";
+		}
+		result += this.description + ", ";
+		result += this.date.toString();
+		result += "]";
+		return result;
 	}
 	
 }

@@ -1,5 +1,6 @@
 package model.user;
 
+import java.util.Collections;
 import java.util.HashSet;
 
 import model.movie.Movie;
@@ -20,6 +21,14 @@ public class User implements IUser{
 	
 	public String getName() {
 		return name;
+	}
+	
+	public byte getAge(){
+		return this.age;
+	}
+	
+	public HashSet<Movie> getWatchList(){
+		return (HashSet<Movie>) Collections.unmodifiableCollection(this.watchList);
 	}
 	
 	public static User register(String name, byte age, String location) {
@@ -59,5 +68,23 @@ public class User implements IUser{
 		}
 		watchList.add(toAdd);
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		String result = "[";
+		result += this.name + ", " + this.age + ", " + this.location;
+		if(this.watchList != null){
+			result += ", [";
+			for(Movie i : watchList){
+				result += i.toString() + " ";
+			}
+			result += "]";
+		}
+		else{
+			result += ", " + null;
+		}
+		result += "]";
+		return result;
 	}
 }

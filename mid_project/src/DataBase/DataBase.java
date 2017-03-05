@@ -22,24 +22,27 @@ public class DataBase {
 	public String getType(){
 		return this.type;
 	}
-	public void insert(Object object){
+	public boolean insert(Object object){
 		/*
 		if(!object.getClass().getName().equals(type)){
 			System.out.println("Invalid entry data!");
 			return;
 		}
 		*/
+		//if the object is contained and is not the same then change the properties
 		if(database.containsKey(object)){
-			return;
+			//database.remove(object);
 		}
-		LinkedHashMap<String, Object> temp = new LinkedHashMap<>();
 		String data = object.toString();
 		String[] splitData = data.substring(1, data.length() - 1).split(", ");
+		
+		LinkedHashMap<String, Object> temp = new LinkedHashMap<>();
 		for (int i = 0; i < fields.length; i++) {
 			temp.put(fields[i], splitData[i]);
 		}
 		database.put(object, temp);
 		System.out.println("Successfully inserted!");
+		return true;
 	}
 	public void print(){
 		System.out.println("Table: " + getType());

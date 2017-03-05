@@ -9,6 +9,12 @@ public abstract class Artist {
 	private byte age;
 	private HashSet<Movie> movies;
 	
+	public Artist(String name, byte age) {
+		this.name = name;
+		this.age = age;
+		this.movies = new HashSet<>();
+	}
+	
 	public Artist(String name, byte age, HashSet<Movie> movies) {
 		this.name = name;
 		this.age = age;
@@ -29,10 +35,7 @@ public abstract class Artist {
 	
 	@Override
 	public String toString() {
-		String result = "[";
-		result += name + ", " + age;
-		result += "]";
-		return super.toString();
+		return this.name;
 	}
 	
 }

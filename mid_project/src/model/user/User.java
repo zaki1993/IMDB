@@ -3,6 +3,7 @@ package model.user;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import model.movie.Movie;
 import model.post.Post;
@@ -78,19 +79,20 @@ public class User implements IUser{
 		return true;
 	}
 	
+
+
 	@Override
 	public String toString() {
-		String result = "[";
-		result += this.name + ", " + this.age + ", " + this.location;
-		if(this.watchList != null){
-			result += ", ";
-			result += watchList.toString();
+		String str = "name: " + name + "\nage: " + age + "\nlocation: " + location + "\nwatchList: ";
+		for (Iterator iterator = watchList.iterator(); iterator.hasNext();) {
+			Movie m = (Movie) iterator.next();
+			if (!iterator.hasNext()) {
+				str += m.getName();
+			} else {
+				str = str + m.getName() + ", ";
+			}
 		}
-		else{
-			result += ", " + null;
-		}
-		result += "]";
-		return result;
+		return str;
 	}
 
 	@Override

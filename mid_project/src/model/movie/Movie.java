@@ -77,46 +77,12 @@ public class Movie {
 		return true;
 	}
 	
+
+
 	@Override
 	public String toString() {
-		String result = "[";
-		result += this.name + ", ";
-		result += this.poster + ", ";
-		if(this.genre != null){
-			result += "[";
-			for(String i : this.genre){
-				result += i + " ";
-			}
-			result += "], ";
-		}
-		else{
-			result += null + ", ";
-		}
-		result += this.rating + ", ";
-		if(this.actors != null){
-			result += ", [";
-			for(Actor i : this.actors){
-				result += i.toString() + " ";
-			}
-			result += "], ";
-		}
-		else{
-			result += null + ", ";
-		}
-		if(this.directors != null){
-			result += "[";
-			for(Director i : this.directors){
-				result += i.toString() + " ";
-			}
-			result += "], ";
-		}
-		else{
-			result += null + ", ";
-		}
-		result += this.description + ", ";
-		result += this.date.toString();
-		result += "]";
-		return result;
+		return "name: " + name + "\nposter: " + poster + "\ngenre: " + genre + "\nrating: " + rating + "\nactors: "
+				+ actors + "\ndirectors: " + directors + "\ndescription: " + description + "\ndate: " + date;
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
-public class DataBase {
+public class DataBase implements IDataBase{
 	private HashMap<Object, LinkedHashMap<String, Object>> database;
 	private String[] fields;
 	private String type;

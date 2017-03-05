@@ -47,10 +47,10 @@ public class Post {
 	@Override
 	public String toString() {
 		StringBuilder str = new StringBuilder(this.movie.toString());
-		str.append("/n Comments: /n");
+		str.append("\n Comments: \n");
 		for (String string : comments) {
 			str.append(string);
-			str.append("/n");
+			str.append("\n");
 		}
 		return str.toString();		
 	}

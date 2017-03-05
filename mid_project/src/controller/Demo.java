@@ -58,7 +58,11 @@ public class Demo {
 		System.out.println("-----------------------------------------");
 		Post post1 = new Post(movie1);
 		Post post2 = new Post(movie2);
+		pesho.comment(post1, "Basi qkiq film prosto ne moga da jiveq bez nego!");
+		gosho.comment(post1, "Taka e brat");
 		DataBase posts = new DataBase("Posts");
-		
+		posts.insert(post1);
+		posts.insert(post2);
+		posts.print();
 	}	
 }

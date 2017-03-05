@@ -6,17 +6,15 @@ import java.util.HashSet;
 
 import DataBase.DataBase;
 import model.movie.*;
+import model.post.Post;
 import model.user.User;
 
 public class Demo {
 
 	public static void main(String[] args) {
 		
-		String[] columns = {"Name", "Poster", "Genres", "Rating", "Actors", "Directors", "Description", "Date" };
-		String[] userColumns = {"Name", "Age", "Location", "WatchList"};
-		
-		DataBase x = new DataBase("Movie", columns);
-		DataBase users = new DataBase("User", userColumns);
+		DataBase x = new DataBase("Movie");
+		DataBase users = new DataBase("User");
 //		
 		
 		Actor brat = new Actor("Brat Pit", (byte)60);
@@ -52,9 +50,15 @@ public class Demo {
 		users.insert(pesho);
 		users.insert(gosho);
 		users.print();
+//		System.out.println("-----------------------------------------");
+//		System.out.println(pesho.toString());
+//		System.out.println("-----------------------------------------");
+//		System.out.println(movie1.toString());
 		System.out.println("-----------------------------------------");
-		System.out.println(pesho.toString());
 		System.out.println("-----------------------------------------");
-		System.out.println(movie1.toString());
+		Post post1 = new Post(movie1);
+		Post post2 = new Post(movie2);
+		DataBase posts = new DataBase("Posts");
+		
 	}	
 }

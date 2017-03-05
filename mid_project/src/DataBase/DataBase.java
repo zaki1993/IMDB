@@ -7,16 +7,10 @@ import java.util.Map.Entry;
 public class DataBase implements IDataBase{
 	
 	private HashSet<Object> database;
-	private String[] fields;
 	private String type;
 	
-	public DataBase(String type, String[] fields){
+	public DataBase(String type){
 		this.database = new HashSet();
-		this.fields = new String[fields.length];
-		int size = 0;
-		for(String i : fields){
-			this.fields[size++] = i;
-		}
 		this.type = type;
 	}
 	

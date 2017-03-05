@@ -76,6 +76,7 @@ public class Movie {
 		rating = ratingAvr / voters;
 		return true;
 	}
+	
 	@Override
 	public String toString() {
 		String result = "[";

@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 public class DataBase implements IDataBase{
+	
 	private HashMap<Object, LinkedHashMap<String, Object>> database;
 	private String[] fields;
 	private String type;
@@ -19,9 +20,11 @@ public class DataBase implements IDataBase{
 		}
 		this.type = type;
 	}
+	
 	public String getType(){
 		return this.type;
 	}
+	
 	public boolean insert(Object object){
 		/*
 		if(!object.getClass().getName().equals(type)){
@@ -44,6 +47,7 @@ public class DataBase implements IDataBase{
 		System.out.println("Successfully inserted!");
 		return true;
 	}
+	
 	public void print(){
 		System.out.println("Table: " + getType());
 		for(Entry<Object, LinkedHashMap<String, Object>> i : database.entrySet()){
@@ -53,4 +57,5 @@ public class DataBase implements IDataBase{
 			System.out.println("");
 		}
 	}
+	
 }

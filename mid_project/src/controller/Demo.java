@@ -30,14 +30,24 @@ public class Demo {
 		users.insert(gosho);
 		
 		pesho.vote(movie1, 5);
-		pesho.vote(movie1, 4);//should fix that!
+		pesho.vote(movie1, 4);
 		gosho.vote(movie1, 9);
-		
+		System.out.println("-------------------After vote----------------------");
 		//update database
 		//works fine
 		x.insert(movie1);
 		x.print();
-		
+		System.out.println("-----------------------------------------");
+		pesho.addToWatchList(movie2);
+		pesho.addToWatchList(movie2);
+		pesho.addToWatchList(movie1);
+		gosho.addToWatchList(movie1);
+		users.insert(pesho);
+		users.insert(gosho);
 		users.print();
+		System.out.println("-----------------------------------------");
+		System.out.println(pesho.toString());
+		System.out.println("-----------------------------------------");
+		System.out.println(movie1.toString());
 	}	
 }

@@ -27,6 +27,7 @@ public class DataBase implements IDataBase{
 	
 	public boolean insert(Object object){
 		//TODO explain how this works
+		//TODO fix it 
 		/*
 		if(!object.getClass().getName().equals(type)){
 			System.out.println("Invalid entry data!");

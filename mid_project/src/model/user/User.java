@@ -83,11 +83,8 @@ public class User implements IUser{
 		String result = "[";
 		result += this.name + ", " + this.age + ", " + this.location;
 		if(this.watchList != null){
-			result += ", [";
-			for(Movie i : watchList){
-				result += i.toString() + " ";
-			}
-			result += "]";
+			result += ", ";
+			result += watchList.toString();
 		}
 		else{
 			result += ", " + null;

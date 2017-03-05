@@ -19,7 +19,7 @@ public class Demo {
 		
 		String[] genre = {"Action", "Drama"};
 		Movie movie1 = new Movie("Pesho kalibrata", "Poster za pesho kalibrata",genre, null, null, "Mnogo qk film", LocalDate.of(2005, Month.AUGUST, 12));
-		Movie movie2 = new Movie("Pesho kalibrata", "Poster za pesho kalibrata",genre, null, null, "Mnogo qk film", LocalDate.of(2005, Month.AUGUST, 12));
+		Movie movie2 = new Movie("Pesho kalibrata2", "Poster za pesho kalibrata2",genre, null, null, "Mnogo po qk film prosto", LocalDate.of(2005, Month.AUGUST, 12));
 		x.insert(movie1);
 		x.insert(movie2);
 		x.print();

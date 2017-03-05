@@ -1,5 +1,6 @@
 package model.user;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -11,12 +12,14 @@ public class User implements IUser{
 	private byte age;
 	private String location;
 	private HashSet<Movie> watchList;
+	private ArrayList<String> voted;
 	
 	private User(String name, byte age, String location) {//don't want ppl able to create users
 		this.name = name;
 		this.age = age;
 		this.location = location;
 		this.watchList = new HashSet<>();
+		this.voted = new ArrayList<>();
 	}
 	
 	public String getName() {
@@ -38,6 +41,11 @@ public class User implements IUser{
 	
 	@Override
 	public boolean vote(Movie toRate, int vote) {
+		if (voted.contains(toRate.getName())) {
+			System.out.println("Already voted for that movie!");
+			return false;
+		}
+		voted.add(toRate.getName());
 		return (toRate == null) ? false : toRate.rate(vote);
 	}
 	

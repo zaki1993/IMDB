@@ -26,6 +26,7 @@ public class DataBase implements IDataBase{
 	}
 	
 	public boolean insert(Object object){
+		//TODO explain how this works
 		/*
 		if(!object.getClass().getName().equals(type)){
 			System.out.println("Invalid entry data!");
@@ -44,7 +45,7 @@ public class DataBase implements IDataBase{
 			temp.put(fields[i], splitData[i]);
 		}
 		database.put(object, temp);
-		System.out.println("Successfully inserted!");
+//		System.out.println("Successfully inserted!");
 		return true;
 	}
 	

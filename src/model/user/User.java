@@ -8,19 +8,37 @@ import java.util.Iterator;
 import model.movie.Movie;
 import model.post.Post;
 
-public class User implements IUser{
+public abstract class User implements IUser{
+	public static enum role { ADMIN, USER };
 	private String name;
 	private byte age;
 	private String location;
 	private HashSet<Movie> watchList;
-	private ArrayList<String> voted;
+	private ArrayList<String> ratedList;
+	private role status;
 	
-	private User(String name, byte age, String location) {//don't want ppl able to create users
+	// we need this constructor, because only the ADMIN can create users with roles
+	// make the constructor protected so we can call it only from the classes that inherit this class
+	protected User(String name, byte age, String location, role status){
 		this.name = name;
 		this.age = age;
 		this.location = location;
 		this.watchList = new HashSet<>();
-		this.voted = new ArrayList<>();
+		this.ratedList = new ArrayList<>();
+		this.status = status;
+	}
+	
+	// this constructor is when a regular user clicks the button register
+	// then we call this constructor
+	// call the other constructor with USER as a status
+	// make the constructor protected so we can call it only from the classes that inherit this class
+	protected User(String name, byte age, String location) {
+		this(name, age, location, role.USER);
+	}
+
+	// promote and demote user helper
+	protected void setStatus(User.role status){
+		this.status = status;
 	}
 	
 	public String getName() {
@@ -31,22 +49,13 @@ public class User implements IUser{
 		return this.age;
 	}
 	
-	public HashSet<Movie> getWatchList(){
-		return (HashSet<Movie>) Collections.unmodifiableCollection(this.watchList);
-	}
-	
-	public static User register(String name, byte age, String location) {
-		User newUser = new User(name, age, location);
-		return newUser;
-	}
-	
 	@Override
 	public boolean vote(Movie toRate, int vote) {
-		if (voted.contains(toRate.getName())) {
+		if (ratedList.contains(toRate.getName())) {
 			System.out.println("Already voted for that movie!");
 			return false;
 		}
-		voted.add(toRate.getName());
+		ratedList.add(toRate.getName());
 		return (toRate == null) ? false : toRate.rate(vote);
 	}
 	
@@ -78,8 +87,6 @@ public class User implements IUser{
 		watchList.add(toAdd);
 		return true;
 	}
-	
-
 
 	@Override
 	public String toString() {

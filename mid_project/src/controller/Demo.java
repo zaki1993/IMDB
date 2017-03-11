@@ -5,6 +5,7 @@ import java.time.Month;
 import java.util.HashSet;
 
 import DataBase.DataBase;
+import exceptions.InvalidUserDataException;
 import model.movie.*;
 import model.post.Post;
 import model.user.CommonUser;
@@ -12,7 +13,7 @@ import model.user.User;
 
 public class Demo {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InvalidUserDataException {
 		
 		DataBase x = new DataBase("Movie");
 		DataBase users = new DataBase("User");

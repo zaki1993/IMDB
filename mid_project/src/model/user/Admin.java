@@ -1,7 +1,9 @@
 package model.user;
 
+import exceptions.InvalidUserDataException;
+
 public final class Admin extends User{
-	private Admin(String name, byte age, String location){
+	private Admin(String name, byte age, String location) throws InvalidUserDataException{
 		super(name, age, location, User.role.ADMIN);
 	}
 

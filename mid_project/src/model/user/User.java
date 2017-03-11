@@ -20,9 +20,9 @@ public abstract class User implements IUser{
 	
 	// we need this constructor, because only the ADMIN can create users with roles
 	// make the constructor protected so we can call it only from the classes that inherit this class
-	protected User(String name, byte age, String location, role status) throws InvalidUserDataException{
+	protected User(String name, byte age, String location, role status) throws InvalidUserException{
 		if(name.isEmpty() || age < 0 || location.isEmpty()){
-			throw new InvalidUserDataException();
+			throw new InvalidUserException();
 		}
 		this.name = name;
 		this.age = age;
@@ -36,7 +36,7 @@ public abstract class User implements IUser{
 	// then we call this constructor
 	// call the other constructor with USER as a status
 	// make the constructor protected so we can call it only from the classes that inherit this class
-	protected User(String name, byte age, String location) throws InvalidUserDataException {
+	protected User(String name, byte age, String location) throws InvalidUserException {
 		this(name, age, location, role.USER);
 	}
 

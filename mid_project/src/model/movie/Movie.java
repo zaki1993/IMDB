@@ -1,8 +1,11 @@
 package model.movie;
 
 import java.time.LocalDate;
+
 import java.util.Collections;
 import java.util.HashSet;
+
+import exceptions.InvalidMovieException;
 
 public class Movie {
 	
@@ -19,7 +22,10 @@ public class Movie {
 	private int idx;
 	
 	public Movie(String name, String poster, String[] genres, HashSet<Actor> actors,
-			HashSet<Director> scenaristi, String description, LocalDate date) {
+			HashSet<Director> scenaristi, String description, LocalDate date) throws InvalidMovieException {
+		if(name.isEmpty() || poster.isEmpty() || genres == null || actors == null || scenaristi == null || date == null){
+			throw new InvalidMovieException();
+		}
 		this.name = name;
 		this.poster = poster;
 		this.genre = new HashSet<>();

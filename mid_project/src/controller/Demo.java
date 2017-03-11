@@ -5,7 +5,8 @@ import java.time.Month;
 import java.util.HashSet;
 
 import DataBase.DataBase;
-import exceptions.InvalidUserDataException;
+import exceptions.InvalidMovieException;
+import exceptions.InvalidUserException;
 import model.movie.*;
 import model.post.Post;
 import model.user.CommonUser;
@@ -13,7 +14,7 @@ import model.user.User;
 
 public class Demo {
 
-	public static void main(String[] args) throws InvalidUserDataException {
+	public static void main(String[] args) throws InvalidUserException, InvalidMovieException {
 		
 		DataBase x = new DataBase("Movie");
 		DataBase users = new DataBase("User");
@@ -22,10 +23,10 @@ public class Demo {
 		HashSet<Actor> actiorche = new HashSet<>();
 		actiorche.add(brat);
 		String[] genre = {"Action", "Drama"};
-		Movie movie1 = new Movie("Pesho kalibrata", "Poster za pesho kalibrata",genre, actiorche, null, "Mnogo qk film", LocalDate.of(2005, Month.AUGUST, 12));
+		Movie movie1 = new Movie("Pesho kalibrata", "Poster za pesho kalibrata",genre, actiorche, new HashSet<Director>(), "Mnogo qk film", LocalDate.of(2005, Month.AUGUST, 12));
 		
 		// System.out.println(movie1);
-		Movie movie2 = new Movie("Pesho kalibrata2", "Poster za pesho kalibrata2",genre, null, null, "Mnogo po qk film prosto", LocalDate.of(2005, Month.AUGUST, 12));
+		Movie movie2 = new Movie("Pesho kalibrata2", "Poster za pesho kalibrata2",genre, new HashSet<Actor>(), new HashSet<Director>(), "Mnogo po qk film prosto", LocalDate.of(2005, Month.AUGUST, 12));
 		x.insert(movie1);
 		x.insert(movie2);
 		x.print();

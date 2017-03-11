@@ -23,7 +23,7 @@ public class Movie {
 	
 	public Movie(String name, String poster, String[] genres, HashSet<Actor> actors,
 			HashSet<Director> scenaristi, String description, LocalDate date) throws InvalidMovieException {
-		if(name.isEmpty() || poster.isEmpty() || genres == null || actors == null || scenaristi == null || date == null){
+		if(name == null || name.isEmpty() || poster == null || poster.isEmpty() || genres == null || actors == null || scenaristi == null || date == null){
 			throw new InvalidMovieException();
 		}
 		this.name = name;

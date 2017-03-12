@@ -5,6 +5,7 @@ import java.time.Month;
 import java.util.HashSet;
 
 import DataBase.DataBase;
+import db_connector.IMDbConnect;
 import exceptions.InvalidMovieException;
 import exceptions.InvalidUserException;
 import model.movie.*;
@@ -15,6 +16,10 @@ import model.user.User;
 public class Demo {
 
 	public static void main(String[] args) throws InvalidUserException, InvalidMovieException {
+		
+		IMDbConnect connect = new IMDbConnect();
+		connect.getData();
+		System.out.println("--------DataBase--------");
 		
 		DataBase x = new DataBase("Movie");
 		DataBase users = new DataBase("User");

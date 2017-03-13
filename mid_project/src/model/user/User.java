@@ -1,17 +1,27 @@
 package model.user;
 
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
+import DataBase.Request;
+import db_connector.IMDbConnect;
+import exceptions.InvalidMovieException;
+import exceptions.InvalidUserException;
+import model.movie.Actor;
+import model.movie.Director;
 import model.movie.Movie;
 import model.post.Post;
-import exceptions.*;
 
-public abstract class User implements IUser{
+public class User implements IUser{
 	public static enum role { ADMIN, USER };
 	private String name;
+	private String pass;
 	private byte age;
 	private String location;
 	private HashSet<Movie> watchList;
@@ -20,30 +30,111 @@ public abstract class User implements IUser{
 	
 	// we need this constructor, because only the ADMIN can create users with roles
 	// make the constructor protected so we can call it only from the classes that inherit this class
-	protected User(String name, byte age, String location, role status) throws InvalidUserException{
-		if(name == null || name.isEmpty() || age < 0 || location == null || location.isEmpty()){
+	private User(String name, String pass, byte age, String location) throws InvalidUserException{
+		if(name == null || name.isEmpty() || pass == null || pass.isEmpty() || age < 0 || location == null || location.isEmpty()){
 			throw new InvalidUserException();
 		}
 		this.name = name;
+		this.pass = pass;
 		this.age = age;
 		this.location = location;
 		this.watchList = new HashSet<>();
 		this.ratedList = new ArrayList<>();
-		this.status = status;
+		this.status = role.USER;
 	}
 	
-	// this constructor is when a regular user clicks the button register
-	// then we call this constructor
-	// call the other constructor with USER as a status
-	// make the constructor protected so we can call it only from the classes that inherit this class
-	protected User(String name, byte age, String location) throws InvalidUserException {
-		this(name, age, location, role.USER);
+
+	public static void register(String name, String pass, byte age, String location){
+		// TODO
+		IMDbConnect imdb = IMDbConnect.getInstance();
+		try {
+			PreparedStatement stmt = imdb.getConnection().prepareStatement("INSERT INTO `IMDb_user`(`name`, `password`, `age`, `location`, `Status_id`) VALUES (?, ?, ?, ?, ?)");
+			stmt.setString(1, name);
+			stmt.setString(2, pass);
+			stmt.setInt(3, age);
+			stmt.setString(4, location);
+			stmt.setInt(5, 2);
+			imdb.insertData(stmt);
+		} catch (SQLException e) {
+			// TODO
+			e.printStackTrace();
+		}
 	}
 
 	// promote and demote user helper
 	protected void setStatus(User.role status){
 		this.status = status;
 	}
+	
+	public void createPost(Movie movie){
+		if(this.status == role.USER){
+			return;
+		}
+		Post post = new Post(movie);
+		// TODO
+	}
+	
+	public static void addMovie(String name) {
+//		if(this.status == role.USER){
+//			return;
+//		}
+		String[] names = name.split(" ");
+		StringBuilder link = new StringBuilder("http://www.omdbapi.com/?t=");
+		for (int i = 0; i < names.length; i++) {
+			if(i == 0){
+				link.append(names[i]);
+				continue;
+			}
+			link.append("+");
+			link.append(names[i]);
+		}
+		try {
+			String asd = Request.read(link.toString());
+			System.out.println(asd);
+			String rs = asd.substring(asd.indexOf("\"Response\":\""));
+			
+			Map<String, String> jdata;
+			
+			
+			
+			if(rs.contains("False")){
+				throw new InvalidMovieException();
+			}
+			else{
+				
+			}
+		} catch (IOException e) {
+			// TODO
+			e.printStackTrace();
+		} catch (InvalidMovieException e){
+			System.out.println("Ne e nameren film, trqbwa da go oprawim!");
+		}
+		
+		
+//		try {
+//			//Movie movie = new Movie(name, poster, genres, actors, scenaristi, description, date);
+//			// TODO
+//		} catch (InvalidMovieException e) {
+//			// TODO
+//			e.printStackTrace();
+//		}
+	}
+	
+	public void addActor(String name, byte age){
+		if(this.status == role.USER){
+			return;
+		}
+		Actor actor = new Actor(name, age);
+		// TODO
+	}
+	
+	public void addDirector(String name, byte age){
+		if(this.status == role.USER){
+			return;
+		}
+		Director director = new Director(name, age);
+		// TODO
+	} 
 	
 	public String getName() {
 		return name;

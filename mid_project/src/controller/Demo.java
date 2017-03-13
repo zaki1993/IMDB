@@ -1,22 +1,19 @@
 package controller;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.HashSet;
+import java.io.IOException;
 
-import DataBase.DataBase;
-import db_connector.IMDbConnect;
+import DataBase.Request;
 import exceptions.InvalidMovieException;
 import exceptions.InvalidUserException;
-import model.movie.*;
-import model.post.Post;
-import model.user.CommonUser;
 import model.user.User;
 
 public class Demo {
 
 	public static void main(String[] args) throws InvalidUserException, InvalidMovieException {
+		//User.register("Goshod", "goshko123", (byte)20, "Germaniq");
 		
+		//User.addMovie("Logan");
+		/*
 		IMDbConnect connect = new IMDbConnect();
 		connect.getData();
 		System.out.println("--------DataBase--------");
@@ -36,8 +33,8 @@ public class Demo {
 		x.insert(movie2);
 		x.print();
 		
-		CommonUser pesho = CommonUser.register("Pesho", (byte) 27, "Bulgaria");
-		CommonUser gosho = CommonUser.register("Gosho", (byte) 50, "Polsha");
+		User pesho = User.register("Pesho", (byte) 27, "Bulgaria");
+		User gosho = User.register("Gosho", (byte) 50, "Polsha");
 		users.insert(pesho);
 		users.insert(gosho);
 		
@@ -73,5 +70,6 @@ public class Demo {
 		posts.insert(post1);
 		posts.insert(post2);
 		posts.print();
+		*/
 	}	
 }

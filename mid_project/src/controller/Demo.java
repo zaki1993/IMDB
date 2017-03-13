@@ -12,6 +12,10 @@ public class Demo {
 	public static void main(String[] args) throws InvalidUserException, InvalidMovieException {
 		//User.register("Goshod", "goshko123", (byte)20, "Germaniq");
 		
+		User admin = User.login("admin", "admin");
+		admin.addMovie("Iron man");
+		User gosho = User.login("Gosho", "goshko123");
+		gosho.addMovie("Iron man");
 		//User.addMovie("Logan");
 		/*
 		IMDbConnect connect = new IMDbConnect();

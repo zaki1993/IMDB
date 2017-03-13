@@ -2,12 +2,15 @@ package model.user;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+
+import com.mysql.jdbc.Statement;
 
 import DataBase.Request;
 import db_connector.IMDbConnect;
@@ -21,7 +24,6 @@ import model.post.Post;
 public class User implements IUser{
 	public static enum role { ADMIN, USER };
 	private String name;
-	private String pass;
 	private byte age;
 	private String location;
 	private HashSet<Movie> watchList;
@@ -30,21 +32,56 @@ public class User implements IUser{
 	
 	// we need this constructor, because only the ADMIN can create users with roles
 	// make the constructor protected so we can call it only from the classes that inherit this class
-	private User(String name, String pass, byte age, String location) throws InvalidUserException{
-		if(name == null || name.isEmpty() || pass == null || pass.isEmpty() || age < 0 || location == null || location.isEmpty()){
+	private User(String name, byte age, String location, role status) throws InvalidUserException{
+		if(name == null || name.isEmpty() || age < 0){
 			throw new InvalidUserException();
 		}
 		this.name = name;
-		this.pass = pass;
 		this.age = age;
 		this.location = location;
 		this.watchList = new HashSet<>();
 		this.ratedList = new ArrayList<>();
-		this.status = role.USER;
+		this.status = status;
+	}
+	
+	private User(String name, byte age, String location) throws InvalidUserException{
+		this(name, age, location, role.USER);
+	}
+	
+	public synchronized static User login(String username, String password){
+		IMDbConnect imdb = IMDbConnect.getInstance();
+		try{
+			String query = "SELECT * FROM IMDb_user";
+			Statement st = (Statement) imdb.getConnection().createStatement();
+			ResultSet rs = st.executeQuery(query);
+			String uName = "", uPass = "", uLoc = "";
+			int uAge = 0, uStatus = 0;
+			while(rs.next()){
+				uName = rs.getString("name");
+				uPass = rs.getString("password");
+				uAge = rs.getInt("age");
+				uLoc = rs.getString("location");
+				uStatus = rs.getInt("Status_id");
+				if(username.equals(uName) && password.equals(uPass)){
+					// successfully logged in
+					return new User(username, (byte)uAge, uLoc, uStatus == 1 ? role.ADMIN : role.USER);
+				}
+			}
+			throw new InvalidUserException();
+			
+		}catch(SQLException e){
+			// TODO
+			e.printStackTrace();
+		} catch (InvalidUserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 
-	public static void register(String name, String pass, byte age, String location){
+	public synchronized static void register(String name, String pass, byte age, String location){
 		// TODO
 		IMDbConnect imdb = IMDbConnect.getInstance();
 		try {
@@ -74,10 +111,10 @@ public class User implements IUser{
 		// TODO
 	}
 	
-	public static void addMovie(String name) {
-//		if(this.status == role.USER){
-//			return;
-//		}
+	public void addMovie(String name) {
+		if(this.status == role.USER){
+			return;
+		}
 		String[] names = name.split(" ");
 		StringBuilder link = new StringBuilder("http://www.omdbapi.com/?t=");
 		for (int i = 0; i < names.length; i++) {

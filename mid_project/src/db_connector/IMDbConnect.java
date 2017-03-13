@@ -2,6 +2,8 @@ package db_connector;
 
 import java.sql.*;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 public class IMDbConnect {
 	private static IMDbConnect imdb;
 	private Connection con;
@@ -32,43 +34,11 @@ public class IMDbConnect {
 	public synchronized void insertData(PreparedStatement stmt){
 		try {
 			stmt.executeUpdate();
+		} catch (MySQLIntegrityConstraintViolationException e){
+			System.out.println("Veche ima user s takova ime!");
 		} catch (SQLException e) {
 			// TODO
 			e.printStackTrace();
-		}
-	}
-	
-	public void getData(){
-		try{
-			String query = "select * from IMDb_movie";
-			rs = st.executeQuery(query);
-			ResultSetMetaData mt = rs.getMetaData();
-			int number = mt.getColumnCount();
-			for(int i = 1; i <= number; i++){
-				System.out.print(" | " + mt.getColumnName(i) + " | ");
-			}
-			System.out.println();
-			while(rs.next()){
-				System.out.print(rs.getString("id") + " ");
-				System.out.print(rs.getString("poster") + " ");
-				System.out.print(rs.getString("rating") + " ");
-				System.out.print(rs.getString("description") + " ");
-				System.out.print(rs.getString("date") + " ");
-				System.out.print(rs.getString("name") + " ");
-			}
-			System.out.println();
-		}catch(Exception ex){
-			System.out.println(ex);
-		}
-		finally{
-			try {
-				rs.close();
-				st.close();
-				con.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 }

@@ -3,7 +3,6 @@ package model.user;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,11 +10,13 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.mysql.jdbc.Statement;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 import DataBase.Request;
 import db_connector.IMDbConnect;
 import exceptions.InvalidMovieException;
 import exceptions.InvalidUserException;
+import exceptions.UserNotFoundException;
 import model.movie.Actor;
 import model.movie.Director;
 import model.movie.Movie;
@@ -33,7 +34,7 @@ public class User implements IUser{
 	// we need this constructor, because only the ADMIN can create users with roles
 	// make the constructor protected so we can call it only from the classes that inherit this class
 	private User(String name, byte age, String location, role status) throws InvalidUserException{
-		if(name == null || name.isEmpty() || age < 0){
+		if(name == null || name.isEmpty() || location == null || location.isEmpty() || age < 0){
 			throw new InvalidUserException();
 		}
 		this.name = name;
@@ -48,7 +49,7 @@ public class User implements IUser{
 		this(name, age, location, role.USER);
 	}
 	
-	public synchronized static User login(String username, String password){
+	public synchronized static User login(String username, String password) {
 		IMDbConnect imdb = IMDbConnect.getInstance();
 		try{
 			String query = "SELECT * FROM IMDb_user";
@@ -67,14 +68,17 @@ public class User implements IUser{
 					return new User(username, (byte)uAge, uLoc, uStatus == 1 ? role.ADMIN : role.USER);
 				}
 			}
-			throw new InvalidUserException();
+			throw new UserNotFoundException();
 			
 		}catch(SQLException e){
 			// TODO
 			e.printStackTrace();
-		} catch (InvalidUserException e) {
+		} catch (UserNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Nqma takuv user");
+		} catch (InvalidUserException e){
+			// TODO
+			System.out.println("Nevalidni user danni");
 		}
 		
 		return null;
@@ -82,19 +86,24 @@ public class User implements IUser{
 	
 
 	public synchronized static void register(String name, String pass, byte age, String location){
-		// TODO
-		IMDbConnect imdb = IMDbConnect.getInstance();
-		try {
-			PreparedStatement stmt = imdb.getConnection().prepareStatement("INSERT INTO `IMDb_user`(`name`, `password`, `age`, `location`, `Status_id`) VALUES (?, ?, ?, ?, ?)");
-			stmt.setString(1, name);
-			stmt.setString(2, pass);
-			stmt.setInt(3, age);
-			stmt.setString(4, location);
-			stmt.setInt(5, 2);
-			imdb.insertData(stmt);
-		} catch (SQLException e) {
-			// TODO
-			e.printStackTrace();
+		try{
+			if(name == null || name.isEmpty() || pass == null || pass.isEmpty() || location == null || location.isEmpty()){
+				throw new InvalidUserException();
+			}
+			IMDbConnect imdb = IMDbConnect.getInstance();
+			try {
+				PreparedStatement stmt = imdb.getConnection().prepareStatement("INSERT INTO `IMDb_user`(`name`, `password`, `age`, `location`, `Status_id`) VALUES (?, ?, ?, ?, ?)");
+				stmt.setString(1, name);
+				stmt.setString(2, pass);
+				stmt.setInt(3, age);
+				stmt.setString(4, location);
+				stmt.setInt(5, 2);
+				imdb.insertData(stmt);
+			} catch (SQLException e) {
+				System.out.println("Ima nqkakva greshka pri sql sintaksisa!");
+			} 
+		} catch(InvalidUserException e){
+			System.out.println("Nevalidni user danni");
 		}
 	}
 

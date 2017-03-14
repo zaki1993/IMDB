@@ -1,8 +1,11 @@
 package db_connector;
 
-import java.sql.*;
-
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class IMDbConnect {
 	private static IMDbConnect imdb;
@@ -13,7 +16,7 @@ public class IMDbConnect {
 	private IMDbConnect(){
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/IMDb", "root", "14eiuqhwdyeuq");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/IMDb", "streetzaki", "14eiuqhwdyeuQ*");
 			st = con.createStatement();
 		}catch(Exception ex){
 			System.out.println(ex);
@@ -34,11 +37,9 @@ public class IMDbConnect {
 	public synchronized void insertData(PreparedStatement stmt){
 		try {
 			stmt.executeUpdate();
-		} catch (MySQLIntegrityConstraintViolationException e){
-			System.out.println("Veche ima user s takova ime!");
 		} catch (SQLException e) {
 			// TODO
-			e.printStackTrace();
+			System.out.println("Ima greshak v zaqvkat aza insert!");
 		}
 	}
 }

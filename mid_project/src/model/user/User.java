@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.mysql.jdbc.Statement;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 import DataBase.Request;
 import db_connector.IMDbConnect;

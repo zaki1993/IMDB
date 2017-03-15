@@ -1,7 +1,6 @@
 
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,20 +8,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import exceptions.InvalidUserException;
-import exceptions.UserNotFoundException;
 import model.user.User;
 
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class RegisterServlet
  */
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/register")
+public class RegisterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginServlet() {
+    public RegisterServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,20 +37,19 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		String user = request.getParameter("username");
-		String password = request.getParameter("password");
-		User newUser = null;
-		
+		String password  = request.getParameter("password");
+		String age = request.getParameter("age");
+		String location = request.getParameter("location");
 		try{
-			newUser = User.login(user, password);
+			User.register(user, password, (byte) Integer.parseInt(age), location);
 			
-			//todo redirect to logged page
+			//todo do something
 			
-		} catch(InvalidUserException | UserNotFoundException ex){
-			// redirect to home page
+		} catch(InvalidUserException ex){
 			response.sendRedirect("index.html");
 		}
+
 	}
 
 }

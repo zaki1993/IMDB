@@ -5,11 +5,12 @@ import java.io.IOException;
 import DataBase.Request;
 import exceptions.InvalidMovieException;
 import exceptions.InvalidUserException;
+import exceptions.UserNotFoundException;
 import model.user.User;
 
 public class Demo {
 
-	public static void main(String[] args) throws InvalidUserException, InvalidMovieException {
+	public static void main(String[] args) throws InvalidUserException, InvalidMovieException, UserNotFoundException {
 		//User.register("Goshod", "goshko123", (byte)20, "Germaniq");
 		User.register("admin", "admin", (byte)25, "Sofia");
 		User admin = User.login("admin", "admin");

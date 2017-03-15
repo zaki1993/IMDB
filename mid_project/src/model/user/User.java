@@ -48,11 +48,11 @@ public class User implements IUser{
 		this(name, age, location, role.USER);
 	}
 	
-	public synchronized static User login(String username, String password) {
+	public synchronized static User login(String username, String password) throws InvalidUserException, UserNotFoundException {
 		IMDbConnect imdb = IMDbConnect.getInstance();
 		try{
 			String query = "SELECT * FROM IMDb_user";
-			Statement st = (Statement) imdb.getConnection().createStatement();
+			Statement st = (Statement) imdb.getInstance().getConnection().createStatement();
 			ResultSet rs = st.executeQuery(query);
 			String uName = "", uPass = "", uLoc = "";
 			int uAge = 0, uStatus = 0;
@@ -72,38 +72,27 @@ public class User implements IUser{
 		}catch(SQLException e){
 			// TODO
 			e.printStackTrace();
-		} catch (UserNotFoundException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Nqma takuv user");
-		} catch (InvalidUserException e){
-			// TODO
-			System.out.println("Nevalidni user danni");
 		}
-		
 		return null;
 	}
 	
 
-	public synchronized static void register(String name, String pass, byte age, String location){
-		try{
-			if(name == null || name.isEmpty() || pass == null || pass.isEmpty() || location == null || location.isEmpty()){
-				throw new InvalidUserException();
-			}
-			IMDbConnect imdb = IMDbConnect.getInstance();
-			try {
-				PreparedStatement stmt = imdb.getConnection().prepareStatement("INSERT INTO `IMDb_user`(`name`, `password`, `age`, `location`, `Status_id`) VALUES (?, ?, ?, ?, ?)");
-				stmt.setString(1, name);
-				stmt.setString(2, pass);
-				stmt.setInt(3, age);
-				stmt.setString(4, location);
-				stmt.setInt(5, 2);
-				imdb.insertData(stmt);
-			} catch (SQLException e) {
-				System.out.println("Ima nqkakva greshka pri sql sintaksisa!");
-			} 
-		} catch(InvalidUserException e){
-			System.out.println("Nevalidni user danni");
+	public synchronized static void register(String name, String pass, byte age, String location) throws InvalidUserException{
+		if(name == null || name.isEmpty() || pass == null || pass.isEmpty() || location == null || location.isEmpty()){
+			throw new InvalidUserException();
 		}
+		IMDbConnect imdb = IMDbConnect.getInstance();
+		try {
+			PreparedStatement stmt = imdb.getConnection().prepareStatement("INSERT INTO `IMDb_user`(`name`, `password`, `age`, `location`, `Status_id`) VALUES (?, ?, ?, ?, ?)");
+			stmt.setString(1, name);
+			stmt.setString(2, pass);
+			stmt.setInt(3, age);
+			stmt.setString(4, location);
+			stmt.setInt(5, 2);
+			imdb.insertData(stmt);
+		} catch (SQLException e) {
+			System.out.println("Ima nqkakva greshka pri sql sintaksisa!");
+		} 
 	}
 
 	// promote and demote user helper

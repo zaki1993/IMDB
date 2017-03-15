@@ -24,7 +24,7 @@ public class IMDbConnect {
 	}
 	
 	public synchronized Connection getConnection(){
-		return this.con;
+		return IMDbConnect.imdb.con;
 	}
 	
 	public synchronized static IMDbConnect getInstance(){

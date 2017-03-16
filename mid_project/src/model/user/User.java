@@ -28,10 +28,11 @@ public class User implements IUser{
 	private HashSet<Movie> watchList;
 	private ArrayList<String> ratedList;
 	private role status;
+	private long id;
 	
 	// we need this constructor, because only the ADMIN can create users with roles
 	// make the constructor protected so we can call it only from the classes that inherit this class
-	private User(String name, byte age, String location, role status) throws InvalidUserException{
+	private User(String name, byte age, String location, long id, role status) throws InvalidUserException{
 		if(name == null || name.isEmpty() || location == null || location.isEmpty() || age < 0){
 			throw new InvalidUserException();
 		}
@@ -41,30 +42,37 @@ public class User implements IUser{
 		this.watchList = new HashSet<>();
 		this.ratedList = new ArrayList<>();
 		this.status = status;
+		this.id = id;
 	}
 	
-	private User(String name, byte age, String location) throws InvalidUserException{
-		this(name, age, location, role.USER);
+	private User(String name, byte age, String location, long id) throws InvalidUserException{
+		this(name, age, location, id, role.USER);
+	}
+	
+	public String getStatus(){
+		return status.toString();
 	}
 	
 	public synchronized static User login(String username, String password) throws InvalidUserException, UserNotFoundException {
 		IMDbConnect imdb = IMDbConnect.getInstance();
 		try{
-			String query = "SELECT name, password, age, location, status_id FROM IMDb_user WHERE name = ? and password = ?";
+			String query = "SELECT id, name, password, age, location, status_id FROM IMDb_user WHERE name = ? and password = ?";
 			PreparedStatement st = imdb.getInstance().getConnection().prepareStatement(query);
 			st.setString(1, username);
 			st.setString(2, password);
 			ResultSet rs =  st.executeQuery();
 			String uName = "", uPass = "", uLoc = "";
 			int uAge = 0, uStatus = 0;
+			long uId = 0l;
 			
 			while(rs.next()){
+				uId = rs.getLong("id");
 				uName = rs.getString("name");
 				uPass = rs.getString("password");
 				uAge = rs.getInt("age");
 				uLoc = rs.getString("location");
 				uStatus = rs.getInt("status_id");
-				User newUser = new User(username, (byte)uAge, uLoc, uStatus == 1 ? role.ADMIN : role.USER);
+				User newUser = new User(username, (byte)uAge, uLoc, uId, uStatus == 1 ? role.ADMIN : role.USER);
 				return newUser;
 			}
 			throw new InvalidUserException();
@@ -74,7 +82,6 @@ public class User implements IUser{
 		}
 		return null;
 	}
-	
 
 	public synchronized static void register(String name, String pass, byte age, String location) throws InvalidUserException{
 		if(name == null || name.isEmpty() || pass == null || pass.isEmpty() || location == null || location.isEmpty() || age <= 0){
@@ -93,12 +100,7 @@ public class User implements IUser{
 			System.out.println("Ima nqkakva greshka pri sql sintaksisa!");
 		} 
 	}
-
-	// promote and demote user helper
-	protected void setStatus(User.role status){
-		this.status = status;
-	}
-	
+		
 	public void createPost(Movie movie){
 		if(this.status == role.USER){
 			return;

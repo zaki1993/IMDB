@@ -1,5 +1,6 @@
+<%@page import="db_connector.IMDbConnect"%>
 <%@ page language="java" contentType="text/html; charset=windows-1256"
-	pageEncoding="windows-1256"%>
+	pageEncoding="windows-1256" import="java.io.IOException"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -22,6 +23,15 @@
 <title>IMDB</title>
 </head>
 <body>
+ 	<% if(session == null || session.isNew() || IMDbConnect.loggedUsers == null || IMDbConnect.loggedUsers.isEmpty()){
+ 		// if the session is invalid then redirect
+ 		// if someone tries to call this file without permission then also redirect (TODO)
+	 		response.sendRedirect("index.html");
+	 		return;
+ 		}
+ 	%>
+ 	<% String status = IMDbConnect.loggedUsers.get(session.getId()).getStatus(); %> <!-- use this status for privileges -->
+	
 	<div class="container">
 	  <div class="row justify-content-md-center maincontainer">
 	    <div class="col-10 col-md-auto">
@@ -47,14 +57,28 @@
 			    	<ul class="nav navbar-nav pull-right">
 				      <li class="dropdown">
 			           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
-			           	 <% if(session == null || session.isNew()){ response.sendRedirect("index.html");} %>
 			             <% String currentUser = (String) (session.getAttribute("IMDb_user"));%> <%= currentUser %> 
 			             <span class="caret"></span>
 			           </a>
 				          <ul class="dropdown-menu" role="menu">
 				            <p>
-				            	Personal info, functionality
-				            	TODO
+				            	<% if(status.equals("ADMIN")) {
+				            			System.out.println("put admin methods here");
+				            			// put admin functionality here
+				            			try {
+				            	            out.println("<li><a>Create post</a></li><li><a>Add Movie</a></li>");
+				            			} catch (IOException e) {
+				            				// in case of error redirect to logout -> home
+				            				response.sendRedirect("logout");
+				            		 		return;
+				            			}
+				            		} 
+				            	%>
+				            	<% if(status.equals("USER")) {
+				            			System.out.println("put user methods here");
+				            		}
+				            	%>
+				            		
 				            </p>
 				            <form action="logout" method="post">
 				            	<input role="button" type="submit" value="Logout"></input>
@@ -63,7 +87,7 @@
 			           </li>
 			          </ul>
 		        	<div>
-			    <p>
+			      <p>
 				   
 			    </p>
 			  </div>

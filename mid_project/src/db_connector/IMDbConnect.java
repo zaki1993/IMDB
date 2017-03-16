@@ -16,7 +16,8 @@ public class IMDbConnect {
 	private IMDbConnect(){
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/IMDb", "streetzaki", "14eiuqhwdyeuQ*");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/IMDb?autoReconnect=true&useSSL=false", "streetzaki", "14eiuqhwdyeuQ*");
+			//jdbc:mysql://localhost:3306/Peoples?autoReconnect=true&useSSL=false
 			st = con.createStatement();
 		}catch(Exception ex){
 			System.out.println(ex);

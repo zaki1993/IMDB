@@ -42,11 +42,15 @@ public class RegisterServlet extends HttpServlet {
 		String age = request.getParameter("age");
 		String location = request.getParameter("location");
 		try{
+			if(age == null || age.isEmpty() || user == null || user.isEmpty() || password == null || password.isEmpty() || location == null || location.isEmpty()){
+				throw new IOException("Invalid register data!");
+			}
+			
 			User.register(user, password, (byte) Integer.parseInt(age), location);
-			
-			//todo do something
-			
+			response.sendRedirect("registered.html");
 		} catch(InvalidUserException ex){
+			response.sendRedirect("index.html");
+		} catch(IOException ex){
 			response.sendRedirect("index.html");
 		}
 

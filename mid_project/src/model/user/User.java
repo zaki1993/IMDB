@@ -1,5 +1,6 @@
 package model.user;
 
+import java.sql.*;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,8 +9,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-
-import com.mysql.jdbc.Statement;
 
 import DataBase.Request;
 import db_connector.IMDbConnect;
@@ -51,34 +50,41 @@ public class User implements IUser{
 	public synchronized static User login(String username, String password) throws InvalidUserException, UserNotFoundException {
 		IMDbConnect imdb = IMDbConnect.getInstance();
 		try{
-			String query = "SELECT * FROM IMDb_user";
-			Statement st = (Statement) imdb.getInstance().getConnection().createStatement();
-			ResultSet rs = st.executeQuery(query);
+			String query = "SELECT name, password, age, location, status_id FROM IMDb_user WHERE name = ? and password = ?";
+			PreparedStatement st = imdb.getInstance().getConnection().prepareStatement(query);
+			st.setString(1, username);
+			st.setString(2, password);
+			System.out.println(st.toString());
+			ResultSet rs =  st.executeQuery();
 			String uName = "", uPass = "", uLoc = "";
 			int uAge = 0, uStatus = 0;
+			if(!rs.first()){
+				throw new UserNotFoundException();
+			}
 			while(rs.next()){
 				uName = rs.getString("name");
 				uPass = rs.getString("password");
 				uAge = rs.getInt("age");
 				uLoc = rs.getString("location");
-				uStatus = rs.getInt("Status_id");
+				uStatus = rs.getInt("status_id");
+				System.out.println(uName + " " + uPass);
 				if(username.equals(uName) && password.equals(uPass)){
 					// successfully logged in
 					return new User(username, (byte)uAge, uLoc, uStatus == 1 ? role.ADMIN : role.USER);
 				}
 			}
-			throw new UserNotFoundException();
 			
-		}catch(SQLException e){
+		} catch(SQLException e){
 			// TODO
 			e.printStackTrace();
 		}
+		System.out.println("after throw");
 		return null;
 	}
 	
 
 	public synchronized static void register(String name, String pass, byte age, String location) throws InvalidUserException{
-		if(name == null || name.isEmpty() || pass == null || pass.isEmpty() || location == null || location.isEmpty()){
+		if(name == null || name.isEmpty() || pass == null || pass.isEmpty() || location == null || location.isEmpty() || age <= 0){
 			throw new InvalidUserException();
 		}
 		IMDbConnect imdb = IMDbConnect.getInstance();
@@ -109,6 +115,27 @@ public class User implements IUser{
 	}
 	
 	public void addMovie(String name) {
+		class LocalMovie{
+			String title;
+			String year;
+			String rated;
+			String released;
+			String runtime;
+			String genre;
+			String writer;
+			String actors;
+			String plot;
+			String language;
+			String country;
+			String awards;
+			String poster;
+			String metascore;
+			String rating;
+			String votes;
+			String id;
+			String type;
+			String response;
+		};
 		if(this.status == role.USER){
 			return;
 		}
@@ -130,11 +157,12 @@ public class User implements IUser{
 			Map<String, String> jdata;
 			
 			
-			
+			//Gson x = new Gson();
 			if(rs.contains("False")){
 				throw new InvalidMovieException();
 			}
-			else{
+			else{	
+				LocalMovie toAdd = new LocalMovie();
 				
 			}
 		} catch (IOException e) {

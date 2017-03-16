@@ -43,10 +43,9 @@ public class LoginServlet extends HttpServlet {
 		String user = request.getParameter("username");
 		String password = request.getParameter("password");
 		User newUser = null;
-		
 		try{
 			newUser = User.login(user, password);
-			
+			response.sendRedirect("logged.html");
 			//todo redirect to logged page
 			
 		} catch(InvalidUserException | UserNotFoundException ex){

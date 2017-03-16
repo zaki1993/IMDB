@@ -47,39 +47,36 @@ public class User implements IUser{
 		this(name, age, location, role.USER);
 	}
 	
-	public synchronized static User login(String username, String password) throws InvalidUserException, UserNotFoundException {
+	public synchronized static boolean login(String username, String password) throws InvalidUserException, UserNotFoundException {
 		IMDbConnect imdb = IMDbConnect.getInstance();
 		try{
 			String query = "SELECT name, password, age, location, status_id FROM IMDb_user WHERE name = ? and password = ?";
 			PreparedStatement st = imdb.getInstance().getConnection().prepareStatement(query);
 			st.setString(1, username);
 			st.setString(2, password);
-			System.out.println(st.toString());
 			ResultSet rs =  st.executeQuery();
 			String uName = "", uPass = "", uLoc = "";
 			int uAge = 0, uStatus = 0;
-			if(!rs.first()){
-				throw new UserNotFoundException();
-			}
+			
 			while(rs.next()){
+				System.out.println("in while");
 				uName = rs.getString("name");
 				uPass = rs.getString("password");
 				uAge = rs.getInt("age");
 				uLoc = rs.getString("location");
 				uStatus = rs.getInt("status_id");
-				System.out.println(uName + " " + uPass);
 				if(username.equals(uName) && password.equals(uPass)){
 					// successfully logged in
-					return new User(username, (byte)uAge, uLoc, uStatus == 1 ? role.ADMIN : role.USER);
+					imdb.loggedUsers.add(new User(username, (byte)uAge, uLoc, uStatus == 1 ? role.ADMIN : role.USER));
+					return true;
 				}
 			}
+			throw new InvalidUserException();
 			
 		} catch(SQLException e){
-			// TODO
-			e.printStackTrace();
+			System.out.println("vuv catch bloka");
 		}
-		System.out.println("after throw");
-		return null;
+		return false;
 	}
 	
 

@@ -6,12 +6,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
+
+import model.user.User;
 
 public class IMDbConnect {
-	private static IMDbConnect imdb;
+	private static IMDbConnect imdb = null;
 	private Connection con;
 	private Statement st;
 	private ResultSet rs;
+	public static Vector<User> loggedUsers = new Vector<>();
 	
 	private IMDbConnect(){
 		try{

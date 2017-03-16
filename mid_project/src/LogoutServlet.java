@@ -6,21 +6,21 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import exceptions.InvalidUserException;
-import model.user.User;
+import db_connector.IMDbConnect;
 
 /**
- * Servlet implementation class RegisterServlet
+ * Servlet implementation class LogoutServlet
  */
-@WebServlet("/register")
-public class RegisterServlet extends HttpServlet {
+@WebServlet("/logout")
+public class LogoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RegisterServlet() {
+    public LogoutServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -37,20 +37,10 @@ public class RegisterServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String user = request.getParameter("username");
-		String password  = request.getParameter("password");
-		String age = request.getParameter("age");
-		String location = request.getParameter("location");
-		try{
-			if(age == null || age.isEmpty() || user == null || user.isEmpty() || password == null || password.isEmpty() || location == null || location.isEmpty()){
-				throw new IOException("Invalid register data!");
-			}
-			
-			User.register(user, password, (byte) Integer.parseInt(age), location);
-			response.sendRedirect("registered.html");
-		} catch(InvalidUserException | IOException ex){
-			response.sendRedirect("index.html");
-		}
+		// TODO Auto-generated method stub
+		HttpSession session = request.getSession(true);
+		IMDbConnect.loggedUsers.remove(session.getId()); // remove the user from the collection of logged in users
+		System.out.println(IMDbConnect.loggedUsers);
+		response.sendRedirect("index.html");
 	}
-
 }

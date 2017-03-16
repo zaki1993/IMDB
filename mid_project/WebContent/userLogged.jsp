@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=windows-1256"
+	pageEncoding="windows-1256" import="model.user.User"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta charset="UTF-8">
@@ -41,44 +43,28 @@
 			        <button type="submit" class="btn btn-default">Search</button>
 			      </form>
 			    </div>
-			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			      <ul class="nav navbar-nav pull-right">
+   			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			    	<ul class="nav navbar-nav pull-right">
 				      <li class="dropdown">
-				          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Login <span class="caret"></span></a>
+			           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
+			             <% String currentUser = (String) (session.getAttribute("IMDb_user"));%> <%= currentUser %> 
+			             <span class="caret"></span>
+			           </a>
 				          <ul class="dropdown-menu" role="menu">
-				            <form action="login" method="post">
-							  Username: 
-							  <input type="text" name="username" placeholder="Username">
-							  <br>
-							  Password: 
-							  <input type="password" name="password" placeholder="Password">
-							  <br><br>
-							  <input type="submit" value="Login">
-							</form>
+				            <p>
+				            	Personal info, functionality
+				            	TODO
+				            </p>
+				            <form action="logout" method="post">
+				            	<input role="button" type="submit" value="Logout"></input>
+				            </form>
 				          </ul>	
-			          </li>
-			        <li>
-			        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Register <span class="caret"></span></a>
-				          <ul class="dropdown-menu" role="menu">
-				            <form action="register" method="post">
-							  Username: 
-							  <input type="text" name="username" placeholder="Username">
-							  <br>
-							  Password: 
-							  <input type="password" name="password" placeholder="Password">
-							  <br>
-							  Age: 
-							  <input type="number" name="age" placeholder="Age">
-							  <br>
-							  Location: 
-							  <input type="text" name="location" placeholder="Location">
-							  <br><br>
-							  <input type="submit" value="Register">
-							</form>
-				          </ul>	
-		            </li>
-			      </ul>
-			    </div>
+			           </li>
+			          </ul>
+		        	<div>
+			    <p>
+				   
+			    </p>
 			  </div>
 			</nav>			
 		   </div>

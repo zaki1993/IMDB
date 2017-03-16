@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import model.user.User;
@@ -15,7 +16,7 @@ public class IMDbConnect {
 	private Connection con;
 	private Statement st;
 	private ResultSet rs;
-	public static Vector<User> loggedUsers = new Vector<>();
+	public static Hashtable<String, User> loggedUsers = new Hashtable<>(); // hashtable<sessionID, user>
 	
 	private IMDbConnect(){
 		try{

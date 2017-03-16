@@ -47,7 +47,7 @@ public class User implements IUser{
 		this(name, age, location, role.USER);
 	}
 	
-	public synchronized static boolean login(String username, String password) throws InvalidUserException, UserNotFoundException {
+	public synchronized static User login(String username, String password) throws InvalidUserException, UserNotFoundException {
 		IMDbConnect imdb = IMDbConnect.getInstance();
 		try{
 			String query = "SELECT name, password, age, location, status_id FROM IMDb_user WHERE name = ? and password = ?";
@@ -59,24 +59,20 @@ public class User implements IUser{
 			int uAge = 0, uStatus = 0;
 			
 			while(rs.next()){
-				System.out.println("in while");
 				uName = rs.getString("name");
 				uPass = rs.getString("password");
 				uAge = rs.getInt("age");
 				uLoc = rs.getString("location");
 				uStatus = rs.getInt("status_id");
-				if(username.equals(uName) && password.equals(uPass)){
-					// successfully logged in
-					imdb.loggedUsers.add(new User(username, (byte)uAge, uLoc, uStatus == 1 ? role.ADMIN : role.USER));
-					return true;
-				}
+				User newUser = new User(username, (byte)uAge, uLoc, uStatus == 1 ? role.ADMIN : role.USER);
+				return newUser;
 			}
 			throw new InvalidUserException();
 			
 		} catch(SQLException e){
 			System.out.println("vuv catch bloka");
 		}
-		return false;
+		return null;
 	}
 	
 

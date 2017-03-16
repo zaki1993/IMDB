@@ -2,7 +2,9 @@
 /RemoteSystemsTempFiles/
 
 /.metadata
+*/*/*/IMDbConnect.java
 /.recommenders
+*/.metadata
 /*/.settings
 /*/bin
 /*/.settings

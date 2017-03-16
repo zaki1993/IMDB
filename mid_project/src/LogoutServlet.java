@@ -40,7 +40,6 @@ public class LogoutServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession(true);
 		IMDbConnect.loggedUsers.remove(session.getId()); // remove the user from the collection of logged in users
-		System.out.println(IMDbConnect.loggedUsers);
 		response.sendRedirect("index.html");
 	}
 }

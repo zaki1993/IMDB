@@ -5,10 +5,12 @@ import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -52,14 +54,13 @@ public class LoginServlet extends HttpServlet {
 			HttpSession session = request.getSession(true);
 			IMDbConnect.loggedUsers.put(session.getId(), newUser); // add the logged user into collection with session id
 			session.setAttribute("IMDb_user", user);
-			System.out.println(IMDbConnect.loggedUsers);
 			response.sendRedirect("userLogged.jsp"); //logged-in page 
-			
 		} catch(InvalidUserException | UserNotFoundException ex){
 			// redirect to home page
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
             PrintWriter out = response.getWriter();
             out.println("<script> alert(\"Please make sure you enter a valid username or password.\") </script>");
+            out.println("<script> window.location = 'http://localhost:8080/mid_project/index.html' </script>");
             rd.include(request, response);
 		}
 	}

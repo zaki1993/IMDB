@@ -63,10 +63,9 @@
 				          <ul class="dropdown-menu" role="menu">
 				            <p>
 				            	<% if(status.equals("ADMIN")) {
-				            			System.out.println("put admin methods here");
 				            			// put admin functionality here
 				            			try {
-				            	            out.println("<li><a>Create post</a></li><li><a>Add Movie</a></li>");
+			            	           		out.println("<li><a>Create post</a></li><li><a>Add Movie</a></li><li><a>Rate Movie</a></li><li><a>Comment Post</a></li>");
 				            			} catch (IOException e) {
 				            				// in case of error redirect to logout -> home
 				            				response.sendRedirect("logout");
@@ -75,13 +74,20 @@
 				            		} 
 				            	%>
 				            	<% if(status.equals("USER")) {
-				            			System.out.println("put user methods here");
+				            			// put user functionality here
+				            			try {
+				            	            out.println("<li><a>Rate Movie</a></li><li><a>Comment Post</a></li>");
+				            			} catch (IOException e) {
+				            				// in case of error redirect to logout -> home
+				            				response.sendRedirect("logout");
+				            		 		return;
+				            			}
 				            		}
 				            	%>
 				            		
 				            </p>
 				            <form action="logout" method="post">
-				            	<input role="button" type="submit" value="Logout"></input>
+				            	<input class="btn btn-primary btn-sm col-md-12" role="button" type="submit" value="Logout"></input>
 				            </form>
 				          </ul>	
 			           </li>

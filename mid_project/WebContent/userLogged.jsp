@@ -47,6 +47,7 @@
 			    	<ul class="nav navbar-nav pull-right">
 				      <li class="dropdown">
 			           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
+			           	 <% if(session == null || session.isNew()){ response.sendRedirect("index.html");} %>
 			             <% String currentUser = (String) (session.getAttribute("IMDb_user"));%> <%= currentUser %> 
 			             <span class="caret"></span>
 			           </a>

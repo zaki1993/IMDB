@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionListener;
 
 import db_connector.IMDbConnect;
 import exceptions.InvalidUserException;
@@ -33,7 +34,7 @@ public class LoginServlet extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
+    
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -41,7 +42,7 @@ public class LoginServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
-
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -54,6 +55,7 @@ public class LoginServlet extends HttpServlet {
 			HttpSession session = request.getSession(true);
 			IMDbConnect.loggedUsers.put(session.getId(), newUser); // add the logged user into collection with session id
 			session.setAttribute("IMDb_user", user);
+			session.setMaxInactiveInterval(30); // set session time 30 seconds
 			response.sendRedirect("userLogged.jsp"); //logged-in page 
 		} catch(InvalidUserException | UserNotFoundException ex){
 			// redirect to home page

@@ -97,7 +97,17 @@
 				   
 			    </p>
 			  </div>
+<<<<<<< HEAD
 			</nav>
+=======
+			</nav>			
+		   		<form action="test" method="post">
+							  Movie: 
+							  <input type="text" name="movie" placeholder="movie">
+							  <br>
+							  <input class="btn btn-primary btn-sm col-md-12" type="submit" value="TEST ITT">
+				</form>
+>>>>>>> d7f7233c8759bbcef3dffeeb0f17296e62665bf2
 		   </div>
 	    </div>
 	  </div>

@@ -65,10 +65,6 @@ public class User implements IUser{
 			String uName = "", uPass = "", uLoc = "";
 			int uAge = 0, uStatus = 0;
 			long uId = 0l;
-<<<<<<< HEAD
-=======
-			System.out.println("=================================");
->>>>>>> d7f7233c8759bbcef3dffeeb0f17296e62665bf2
 			if(rs.next()){
 				uId = rs.getLong("id");
 				uName = rs.getString("name");

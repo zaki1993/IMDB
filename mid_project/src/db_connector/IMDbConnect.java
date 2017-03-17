@@ -20,17 +20,15 @@ public class IMDbConnect {
 	private IMDbConnect(){
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-<<<<<<< HEAD
+			
 			if(System.getProperty("os.name").startsWith("Linux")){
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/IMDb?autoReconnect=true&useSSL=false", "streetzaki", "14eiuqhwdyeuQ*");
 			}
 			else{
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/IMDb?autoReconnect=true&useSSL=false", "root", "injikipliok");
 			}
-=======
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/IMDb?autoReconnect=true&useSSL=false", "root", "injikipliok");
 			//jdbc:mysql://localhost:3306/Peoples?autoReconnect=true&useSSL=false
->>>>>>> d7f7233c8759bbcef3dffeeb0f17296e62665bf2
 		}catch(Exception ex){
 			System.out.println(ex.getMessage());
 		}

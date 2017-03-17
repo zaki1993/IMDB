@@ -4,6 +4,10 @@ import java.util.HashSet;
 
 public class Actor extends Artist{
 	
+	public Actor(String name){
+		super(name, (byte) 0);
+	}
+	
 	public Actor(String name, byte age){
 		super(name, age);
 	}

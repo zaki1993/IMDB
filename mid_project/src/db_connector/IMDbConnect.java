@@ -11,10 +11,10 @@ import java.util.Hashtable;
 import model.user.User;
 
 public class IMDbConnect {
+	
 	private static IMDbConnect imdb = null;
-	private Connection con;
-	private Statement st;
-	private ResultSet rs;
+	private Connection con = null;
+
 	public static Hashtable<String, User> loggedUsers = new Hashtable<>(); // hashtable<sessionID, user>
 	
 	private IMDbConnect(){
@@ -22,9 +22,8 @@ public class IMDbConnect {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/IMDb?autoReconnect=true&useSSL=false", "root", "injikipliok");
 			//jdbc:mysql://localhost:3306/Peoples?autoReconnect=true&useSSL=false
-			st = con.createStatement();
 		}catch(Exception ex){
-			System.out.println(ex);
+			System.out.println(ex.getMessage());
 		}
 	}
 	
@@ -38,13 +37,5 @@ public class IMDbConnect {
 		}
 		return IMDbConnect.imdb;
 	}
-	
-	public synchronized void insertData(PreparedStatement stmt){
-		try {
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			// TODO
-			System.out.println("Ima greshak v zaqvkat aza insert!");
-		}
-	}
+
 }

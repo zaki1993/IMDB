@@ -1,14 +1,15 @@
 package model.user;
 
-import java.sql.*;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
+
+import com.google.gson.Gson;
 
 import DataBase.Request;
 import db_connector.IMDbConnect;
@@ -64,8 +65,8 @@ public class User implements IUser{
 			String uName = "", uPass = "", uLoc = "";
 			int uAge = 0, uStatus = 0;
 			long uId = 0l;
-			
-			while(rs.next()){
+			System.out.println("=================================");
+			if(rs.next()){
 				uId = rs.getLong("id");
 				uName = rs.getString("name");
 				uPass = rs.getString("password");
@@ -95,7 +96,7 @@ public class User implements IUser{
 			stmt.setInt(3, age);
 			stmt.setString(4, location);
 			stmt.setInt(5, 2);
-			imdb.insertData(stmt);
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Ima nqkakva greshka pri sql sintaksisa!");
 		} 
@@ -110,6 +111,11 @@ public class User implements IUser{
 	}
 	
 	public void addMovie(String name) {
+		System.out.println("V add Movie sym");
+//		if(this.status != role.ADMIN){
+//			return;
+//		}
+//		
 		class LocalMovie{
 			String title;
 			String year;
@@ -130,10 +136,33 @@ public class User implements IUser{
 			String id;
 			String type;
 			String response;
+			public LocalMovie(String title, String year, String rated, String released, String runtime, String genre,
+					String writer, String actors, String plot, String language, String country, String awards,
+					String poster, String metascore, String rating, String votes, String id, String type,
+					String response) {
+				this.title = title;
+				this.year = year;
+				this.rated = rated;
+				this.released = released;
+				this.runtime = runtime;
+				this.genre = genre;
+				this.writer = writer;
+				this.actors = actors;
+				this.plot = plot;
+				this.language = language;
+				this.country = country;
+				this.awards = awards;
+				this.poster = poster;
+				this.metascore = metascore;
+				this.rating = rating;
+				this.votes = votes;
+				this.id = id;
+				this.type = type;
+				this.response = response;
+			}
+			
 		};
-		if(this.status == role.USER){
-			return;
-		}
+		
 		String[] names = name.split(" ");
 		StringBuilder link = new StringBuilder("http://www.omdbapi.com/?t=");
 		for (int i = 0; i < names.length; i++) {
@@ -145,20 +174,31 @@ public class User implements IUser{
 			link.append(names[i]);
 		}
 		try {
-			String asd = Request.read(link.toString());
-			System.out.println(asd);
-			String rs = asd.substring(asd.indexOf("\"Response\":\""));
 			
-			Map<String, String> jdata;
+			String movieJson = Request.read(link.toString());
+			System.out.println("===========================");
+			System.out.println(movieJson);
+			String rs = movieJson.substring(movieJson.indexOf("\"Response\":\""));
+			System.out.println(rs);
+			Gson x = new Gson();
+			String[] genres = new String[5];
+			HashSet<Actor> actors12 = new HashSet<>();
+			HashSet<Director> directors12 = new HashSet<>();
 			
-			
-			//Gson x = new Gson();
 			if(rs.contains("False")){
 				throw new InvalidMovieException();
 			}
 			else{	
-				LocalMovie toAdd = new LocalMovie();
-				
+				System.out.println("v else sym");
+				LocalMovie toAdd = x.fromJson(movieJson, LocalMovie.class);
+//				String name, String poster, String[] genres, HashSet<Actor> actors,
+//				HashSet<Director> scenaristi, String description, LocalDate date
+				genres[0] = toAdd.genre;
+				actors12.add(new Actor(toAdd.actors));
+				directors12.add(new Director(toAdd.writer));		
+				Movie movie = new Movie(toAdd.title, toAdd.poster, genres, actors12, directors12, toAdd.plot, LocalDate.now());
+				System.out.println("=================================");
+				System.out.println(movie);			
 			}
 		} catch (IOException e) {
 			// TODO

@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
+//Downloads info from Internet
+
 public class Request {
 	private Request(){
 		

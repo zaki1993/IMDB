@@ -23,7 +23,12 @@
 <title>IMDB</title>
 </head>
 <body>
- 	<% if(session == null || session.isNew() || IMDbConnect.loggedUsers == null || IMDbConnect.loggedUsers.isEmpty()){
+	<% if(session == null || session.isNew()){
+			response.sendRedirect("logout");
+			return;
+		}
+	%>
+ 	<% if(IMDbConnect.loggedUsers == null || IMDbConnect.loggedUsers.isEmpty()){
  		// if the session is invalid then redirect
  		// if someone tries to call this file without permission then also redirect (TODO)
 	 		response.sendRedirect("index.html");
@@ -65,7 +70,7 @@
 				            	<% if(status.equals("ADMIN")) {
 				            			// put admin functionality here
 				            			try {
-			            	           		out.println("<li><a>Create post</a></li><li><a>Add Movie</a></li><li><a>Rate Movie</a></li><li><a>Comment Post</a></li>");
+			            	           		out.println("<li><a href=\"createPost\">Create post</a></li><li><a href=\"addMovie\">Add Movie</a></li>");
 				            			} catch (IOException e) {
 				            				// in case of error redirect to logout -> home
 				            				response.sendRedirect("logout");
@@ -94,10 +99,13 @@
 			          </ul>
 		        	<div>
 			      <p>
-				   
 			    </p>
 			  </div>
-			</nav>
+			</nav>	
+			
+			<div id="add-movie">
+				asdasdsad
+			</div>		
 		   </div>
 	    </div>
 	  </div>

@@ -46,9 +46,9 @@
 			        <span class="icon-bar"></span>
 			      </button>
 			      <a class="navbar-brand" href="#">IMDB</a>
-			      <form class="navbar-form navbar-left" role="search" action="test" method="post">
+			      <form class="navbar-form navbar-left" role="search">
 			        <div class="form-group">
-			          <input class="form-control" placeholder="Search" type="text" name = "movie">
+			          <input class="form-control" placeholder="Search" type="text">
 			        </div>
 			        <button type="submit" class="btn btn-default">Search</button>
 			      </form>
@@ -98,6 +98,12 @@
 			    </p>
 			  </div>
 			</nav>			
+		   		<form action="test" method="post">
+							  Movie: 
+							  <input type="text" name="movie" placeholder="movie">
+							  <br>
+							  <input class="btn btn-primary btn-sm col-md-12" type="submit" value="TEST ITT">
+				</form>
 		   </div>
 	    </div>
 	  </div>

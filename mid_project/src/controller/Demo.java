@@ -13,8 +13,8 @@ public class Demo {
 	public static void main(String[] args) throws InvalidUserException, InvalidMovieException, UserNotFoundException {
 		//User.register("Goshod", "goshko123", (byte)20, "Germaniq");
 //		User.register("admin", "admin", (byte)25, "Sofia");
-		User admin = User.login("admin", "admin");
-		admin.addMovie("logan");
+//		User admin = User.login("admin", "admin");
+//		admin.addMovie("logan");
 //		User gosho = User.login("Gosho", "goshko123");
 //		gosho.addMovie("Iron man");
 		//User.addMovie("Logan");

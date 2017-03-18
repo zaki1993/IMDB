@@ -1,15 +1,13 @@
 package model.user;
 
+import java.beans.Statement;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-
-import com.google.gson.Gson;
 
 import DataBase.Request;
 import db_connector.IMDbConnect;
@@ -106,54 +104,12 @@ public class User implements IUser{
 		// TODO
 	}
 	
+	private static String customGsonParser(String json, String name){
+		String temp = json.substring(json.indexOf(name) + name.length() + 3);
+		return temp.substring(0, temp.indexOf("\""));
+	}
+	
 	public static synchronized void addMovie(String name) {		
-		class LocalMovie{
-			String title;
-			String year;
-			String rated;
-			String released;
-			String runtime;
-			String genre;
-			String writer;
-			String actors;
-			String plot;
-			String language;
-			String country;
-			String awards;
-			String poster;
-			String metascore;
-			String rating;
-			String votes;
-			String id;
-			String type;
-			String response;
-			public LocalMovie(String title, String year, String rated, String released, String runtime, String genre,
-					String writer, String actors, String plot, String language, String country, String awards,
-					String poster, String metascore, String rating, String votes, String id, String type,
-					String response) {
-				this.title = title;
-				this.year = year;
-				this.rated = rated;
-				this.released = released;
-				this.runtime = runtime;
-				this.genre = genre;
-				this.writer = writer;
-				this.actors = actors;
-				this.plot = plot;
-				this.language = language;
-				this.country = country;
-				this.awards = awards;
-				this.poster = poster;
-				this.metascore = metascore;
-				this.rating = rating;
-				this.votes = votes;
-				this.id = id;
-				this.type = type;
-				this.response = response;
-			}
-			
-		};
-		
 		String[] names = name.split(" ");
 		StringBuilder link = new StringBuilder("http://www.omdbapi.com/?t=");
 		for (int i = 0; i < names.length; i++) {
@@ -166,16 +122,164 @@ public class User implements IUser{
 		}
 		try {
 			String movieJson = Request.read(link.toString());
+			
 			System.out.println(movieJson);
+			
 			String rs = movieJson.substring(movieJson.indexOf("\"Response\":\""));			
 			if(rs.contains("False")){
 				throw new InvalidMovieException();
 			}
 			else{
+				IMDbConnect imdb = IMDbConnect.getInstance();
+				PreparedStatement stmt;
+				// add the director
+				String director = User.customGsonParser(movieJson, "Director");
+					try {
+						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_director`(`name`) VALUES (?)");
+						stmt.setString(1, director);
+						stmt.executeUpdate();
+					} catch (SQLException ex) {
+						// dublicate fields
+						// nothing to do
+						// we set them to be unique
+						System.out.println("Director: " + ex);
+					}
+				// add all the actors
+				String[] actors = User.customGsonParser(movieJson, "Actors").split(", ");
+				for(int i = 0; i < actors.length; i++){
+					try{
+						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_actor`(`name`) VALUES (?)");
+						stmt.setString(1, actors[i]);
+						stmt.executeUpdate();
+					} catch(SQLException ex){
+						// dublicate fields
+						// nothing to do
+						// we set them to be unique
+						System.out.println("Actor: " + ex);
+					}
+				}
+				// add the movie
+				String movie = User.customGsonParser(movieJson, "Title");
+				String poster = User.customGsonParser(movieJson, "Poster");
+				String rating = User.customGsonParser(movieJson, "imdbRating");
+				String description = User.customGsonParser(movieJson, "Plot");
+				String date = User.customGsonParser(movieJson, "Released");
+				if(rating.equals("N/A")){
+					rating = "0";
+				}
+				try{
+					stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_movie`(`poster`, `rating`, `description`, `date`, `name`) VALUES (?, ?, ?, ?, ?)");
+					stmt.setString(1, poster);
+					stmt.setDouble(2, Double.parseDouble(rating));
+					stmt.setString(3, description);
+					stmt.setString(4, date);
+					stmt.setString(5, movie);
+					stmt.executeUpdate();
+				} catch(SQLException ex){
+					// dublicate fields
+					// nothing to do
+					// we set them to be unique
+					System.out.println("Movie: " + ex);
+				}
+				// add genres
+				String genre = User.customGsonParser(movieJson, "Genre");
+				String[] genres = genre.split(", ");
+				for(int i = 0; i < genres.length; i++){
+					try{
+						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_genre`(`name`) VALUES (?)");
+						stmt.setString(1, genres[i]);
+						stmt.executeUpdate();
+					} catch(SQLException ex){
+						// dublicate fields
+						// nothing to do
+						// we set them to be unique
+						System.out.println("Genre: " + ex);
+					}
+				}
 				
-				//todo LocalMovie temp = new Gson().fromJson(movieJson, LocalMovie.class);
-				System.out.println("IM HEER");
-				Gson x = new Gson();
+				// get movie id
+
+				int movie_id = 0;
+				try{
+					// todo fix this
+					
+					stmt = imdb.getInstance().getConnection().prepareStatement("SELECT id FROM IMDb_movie WHERE name = ?");
+					stmt.setString(1, movie);
+					ResultSet rs1 = stmt.executeQuery();
+					rs1.next();
+					movie_id = rs1.getInt("id");
+				} catch(SQLException ex){
+					// dublicate fields
+					// nothing to do
+					// we set them to be unique
+					System.out.println("Movie id table: " + ex);
+				}
+				
+				// fill genre movie table
+				for(int i = 0; i < genres.length; i++){
+					try{					
+						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_genre_movie` (`genre_name`, `movie_id`) VALUES (?, ?)");
+						stmt.setString(1, genres[i]);
+						stmt.setInt(2, movie_id);
+						stmt.executeUpdate();
+					} catch(SQLException ex){
+						// dublicate fields
+						// nothing to do
+						// we set them to be unique
+						System.out.println("Genre_Movie: " + ex);
+					}
+				}
+				
+				// fill movie director table
+				int director_id = 0;
+				try{
+					// todo fix this
+					
+					stmt = imdb.getInstance().getConnection().prepareStatement("SELECT id FROM IMDb_director WHERE name = ?");
+					stmt.setString(1, director);
+					ResultSet rs1 = stmt.executeQuery();
+					rs1.next();
+					director_id = rs1.getInt("id");
+				} catch(SQLException ex){
+					// dublicate fields
+					// nothing to do
+					// we set them to be unique
+					System.out.println("Movie id table: " + ex);
+				}
+				
+				try{
+					stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_director_movie` (`director_id`, `movie_id`) VALUES (?, ?)");
+					stmt.setInt(1, director_id);
+					stmt.setInt(2, movie_id);
+					stmt.executeUpdate();
+				} catch(SQLException ex){
+					// dublicate fields
+					// nothing to do
+					// we set them to be unique
+					System.out.println("Director_Movie: " + ex);
+				}
+				
+				// fill movie actor table
+				for(int i = 0; i < actors.length; i++){
+					int actor_id = 0;
+					try{
+						stmt = imdb.getInstance().getConnection().prepareStatement("SELECT id FROM IMDb_actor WHERE name = ?");
+						stmt.setString(1, actors[i]);
+						ResultSet rs1 = stmt.executeQuery();
+						rs1.next();
+						actor_id = rs1.getInt("id");
+						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_actor_movie` (`actor_id`, `movie_id`) VALUES (?, ?)");
+						stmt.setInt(1, actor_id);
+						stmt.setInt(2, movie_id);
+						stmt.executeUpdate();
+					} catch(SQLException ex){
+						// dublicate fields
+						// nothing to do
+						// we set them to be unique
+						System.out.println("Actor_Movie: " + ex);
+					}
+					
+				}
 			}
 		} catch (IOException e) {
 			// TODO
@@ -184,22 +288,6 @@ public class User implements IUser{
 			System.out.println("Ne e nameren film, trqbwa da go oprawim!");
 		}
 	}
-	
-	public void addActor(String name, byte age){
-		if(this.status == role.USER){
-			return;
-		}
-		Actor actor = new Actor(name, age);
-		// TODO
-	}
-	
-	public void addDirector(String name, byte age){
-		if(this.status == role.USER){
-			return;
-		}
-		Director director = new Director(name, age);
-		// TODO
-	} 
 	
 	public String getName() {
 		return name;

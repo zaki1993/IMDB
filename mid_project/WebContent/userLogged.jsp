@@ -74,13 +74,14 @@
 			           <ul class="dropdown-menu" role="menu">
 		            	 <% if(status.equals("ADMIN")) {
 		            			// put admin functionality here
-		            			try {
-		            				out.println("<li>");
-		            				out.println("<a>Create post</a>");
-		            				out.println("</li>");
-		            				out.println("<li>");
-		            				out.println("<a id=\"add-movie\">Add Movie</a>");
-		            				out.println("</li>");
+		            			try { %>
+		            				<li>
+		            				<a>Create post</a>
+		            				</li>
+		            				<li>
+		            				<a id="add-movie">Add Movie</a>
+		            				</li>
+		            			<%	
 		            			} catch (IOException e) {
 		            				// in case of error redirect to logout -> home
 		            				response.sendRedirect("logout");
@@ -90,13 +91,14 @@
 		            	 %>
 		            	 <% if(status.equals("USER")) {
 		            			// put user functionality here
-		            			try {
-		            				out.println("<li>");
-		            				out.println("<a>Rate Movie</a>");
-		            				out.println("</li>");
-		            				out.println("<li>");
-		            				out.println("<a>Comment Post</a>");
-		            				out.println("</li>");
+		            			try { %>
+		            				<li>
+		            				<a>Rate Movie</a>
+		            				</li>
+		            				<li>
+		            				<a>Comment Post</a>
+		            				</li>
+		            				<% 
 		            			} catch (IOException e) {
 		            				// in case of error redirect to logout -> home
 		            				response.sendRedirect("logout");

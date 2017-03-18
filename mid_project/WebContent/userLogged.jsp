@@ -112,14 +112,17 @@
 			          </ul>
 		        	<div>
 		        	
-		        	<!-- Add new movie field -->
-				  	<div id="dialog-form" title="Add new movie!">
-					  <form action="addmovie" type="post">
-					      Movie name
-					      <input type="text" name="movie-name" placeholder="Movie name" class="text ui-widget-content ui-corner-all">
-					      <input type="submit" value="Add movie"></input>
-					  </form>
-					</div>
+		        	<% if(status.equals("ADMIN")){
+		        		//<!-- Add new movie field -->
+					  	out.println("<div id=\"dialog-form\" title=\"Add new movie!\">");
+					  	out.println("<form action=\"addmovie\" type=\"post\">");
+					  	out.println("Movie name");
+			  			out.println("<input type=\"text\" name=\"movie-name\" placeholder=\"Movie name\" class=\"text ui-widget-content ui-corner-all\">");
+			  			out.println("<input class=\"btn btn-primary btn-sm col-md-5\" type=\"submit\" value=\"Add movie\"></input>");
+			  			out.println("</form>");
+			  			out.println("</div>");
+		        	}
+					%>
 			  </div>
 			</nav>
 			</nav>
@@ -137,7 +140,7 @@
 	    var dialog = $( "#dialog-form" ).dialog({
 	      autoOpen: false,
 	      height: 200,
-	      width: 350,
+	      width: 300,
 	      modal: true
 	    });
 	 

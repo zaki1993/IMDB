@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.user.User;
+
 /**
  * Servlet implementation class AddMovieServlet
  */
@@ -36,7 +38,8 @@ public class AddMovieServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//todo validation and other stuff
-		response.sendRedirect("addMovie.jsp");
+		User.addMovie(request.getParameter("movie-name"));
+		response.sendRedirect("userLogged.jsp");
 	}
 
 }

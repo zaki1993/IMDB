@@ -5,8 +5,17 @@
 <html>
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="https://bootswatch.com/sandstone/bootstrap.min.css">
-	<style>
+		
+	  <style>
+	    label, input { display:block; }
+	    input.text { margin-bottom:12px; width:95%; padding: .4em; }
+	    fieldset { padding:0; border:0; margin-top:25px; }
+	    h1 { font-size: 1.2em; margin: .6em 0; }
+	    .ui-dialog .ui-state-error { padding: .3em; }
+	    .validateTips { border: 1px solid transparent; padding: 0.3em; }
+	    
 		body{
 			background-color: lightgray;
 		}
@@ -15,10 +24,12 @@
 			width: 1000px;
 			margin: auto;
 		}
+		
 		.mainbody{
 			background-color: white;
 			height: 100vh;
 		}
+		
 	</style>
 <title>IMDB</title>
 </head>
@@ -60,61 +71,80 @@
 			             <% String currentUser = (String) (session.getAttribute("IMDb_user"));%> <%= currentUser %> 
 			             <span class="caret"></span>
 			           </a>
-				          <ul class="dropdown-menu" role="menu">
-				            <p>
-				            	<% if(status.equals("ADMIN")) {
-				            			// put admin functionality here
-				            			try {
-			            	           		out.println("<li><a>Create post</a></li><li><a>Add Movie</a></li><li><a>Rate Movie</a></li><li><a>Comment Post</a></li>");
-				            			} catch (IOException e) {
-				            				// in case of error redirect to logout -> home
-				            				response.sendRedirect("logout");
-				            		 		return;
-				            			}
-				            		} 
-				            	%>
-				            	<% if(status.equals("USER")) {
-				            			// put user functionality here
-				            			try {
-				            	            out.println("<li><a>Rate Movie</a></li><li><a>Comment Post</a></li>");
-				            			} catch (IOException e) {
-				            				// in case of error redirect to logout -> home
-				            				response.sendRedirect("logout");
-				            		 		return;
-				            			}
-				            		}
-				            	%>
-				            		
-				            </p>
-				            <form action="logout" method="post">
-				            	<input class="btn btn-primary btn-sm col-md-12" role="button" type="submit" value="Logout"></input>
-				            </form>
-				          </ul>	
-			           </li>
+			           <ul class="dropdown-menu" role="menu">
+		            	 <% if(status.equals("ADMIN")) {
+		            			// put admin functionality here
+		            			try {
+		            				out.println("<li>");
+		            				out.println("<a>Create post</a>");
+		            				out.println("</li>");
+		            				out.println("<li>");
+		            				out.println("<a id=\"add-movie\">Add Movie</a>");
+		            				out.println("</li>");
+		            			} catch (IOException e) {
+		            				// in case of error redirect to logout -> home
+		            				response.sendRedirect("logout");
+		            		 		return;
+		            			}
+		            		} 
+		            	 %>
+		            	 <% if(status.equals("USER")) {
+		            			// put user functionality here
+		            			try {
+		            				out.println("<li>");
+		            				out.println("<a>Rate Movie</a>");
+		            				out.println("</li>");
+		            				out.println("<li>");
+		            				out.println("<a>Comment Post</a>");
+		            				out.println("</li>");
+		            			} catch (IOException e) {
+		            				// in case of error redirect to logout -> home
+		            				response.sendRedirect("logout");
+		            		 		return;
+		            			}
+		            		}
+		            	 %>
+			             <form action="logout" method="post">
+			            	 <input class="btn btn-primary btn-sm col-md-12" role="button" type="submit" value="Logout"></input>
+			             </form>
+			           </ul>	
+			          </li>
 			          </ul>
 		        	<div>
-			      <p>
-				   
-			    </p>
+		        	
+		        	<!-- Add new movie field -->
+				  	<div id="dialog-form" title="Add new movie!">
+					  <form action="addmovie" type="post">
+					      Movie name
+					      <input type="text" name="movie-name" placeholder="Movie name" class="text ui-widget-content ui-corner-all">
+					      <input type="submit" value="Add movie"></input>
+					  </form>
+					</div>
 			  </div>
-<<<<<<< HEAD
 			</nav>
-=======
-			</nav>			
-		   		<form action="test" method="post">
-							  Movie: 
-							  <input type="text" name="movie" placeholder="movie">
-							  <br>
-							  <input class="btn btn-primary btn-sm col-md-12" type="submit" value="TEST ITT">
-				</form>
->>>>>>> d7f7233c8759bbcef3dffeeb0f17296e62665bf2
+			</nav>
 		   </div>
 	    </div>
 	  </div>
 	</div>
 	
-	<!--  SCRIPTS  -->	
+	<!--  SCRIPTS  -->
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="https://bootswatch.com/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+	  $( function() {
+	    var dialog = $( "#dialog-form" ).dialog({
+	      autoOpen: false,
+	      height: 200,
+	      width: 350,
+	      modal: true
+	    });
+	 
+	    $( "#add-movie" ).button().on( "click", function() {
+	      dialog.dialog( "open" );
+	    });
+	  } );
+	</script>
 </body>
 </html>

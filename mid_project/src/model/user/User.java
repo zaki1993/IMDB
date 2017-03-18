@@ -101,20 +101,12 @@ public class User implements IUser{
 		} 
 	}
 		
-	public void createPost(Movie movie){
-		if(this.status == role.USER){
-			return;
-		}
+	public static synchronized void createPost(Movie movie){
 		Post post = new Post(movie);
 		// TODO
 	}
 	
-	public void addMovie(String name) {
-		System.out.println("V add Movie sym");
-//		if(this.status != role.ADMIN){
-//			return;
-//		}
-//		
+	public static synchronized void addMovie(String name) {		
 		class LocalMovie{
 			String title;
 			String year;
@@ -173,31 +165,16 @@ public class User implements IUser{
 			link.append(names[i]);
 		}
 		try {
-			
 			String movieJson = Request.read(link.toString());
-			System.out.println("===========================");
 			System.out.println(movieJson);
-			String rs = movieJson.substring(movieJson.indexOf("\"Response\":\""));
-			System.out.println(rs);
-			Gson x = new Gson();
-			String[] genres = new String[5];
-			HashSet<Actor> actors12 = new HashSet<>();
-			HashSet<Director> directors12 = new HashSet<>();
-			
+			String rs = movieJson.substring(movieJson.indexOf("\"Response\":\""));			
 			if(rs.contains("False")){
 				throw new InvalidMovieException();
 			}
-			else{	
-				System.out.println("v else sym");
-				LocalMovie toAdd = x.fromJson(movieJson, LocalMovie.class);
-//				String name, String poster, String[] genres, HashSet<Actor> actors,
-//				HashSet<Director> scenaristi, String description, LocalDate date
-				genres[0] = toAdd.genre;
-				actors12.add(new Actor(toAdd.actors));
-				directors12.add(new Director(toAdd.writer));		
-				Movie movie = new Movie(toAdd.title, toAdd.poster, genres, actors12, directors12, toAdd.plot, LocalDate.now());
-				System.out.println("=================================");
-				System.out.println(movie);			
+			else{
+				
+				//todo LocalMovie temp = new Gson().fromJson(movieJson, LocalMovie.class);
+				System.out.println("IM HEER");
 			}
 		} catch (IOException e) {
 			// TODO
@@ -205,15 +182,6 @@ public class User implements IUser{
 		} catch (InvalidMovieException e){
 			System.out.println("Ne e nameren film, trqbwa da go oprawim!");
 		}
-		
-		
-//		try {
-//			//Movie movie = new Movie(name, poster, genres, actors, scenaristi, description, date);
-//			// TODO
-//		} catch (InvalidMovieException e) {
-//			// TODO
-//			e.printStackTrace();
-//		}
 	}
 	
 	public void addActor(String name, byte age){

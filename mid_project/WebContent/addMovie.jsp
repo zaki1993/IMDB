@@ -70,7 +70,7 @@
 				            	<% if(status.equals("ADMIN")) {
 				            			// put admin functionality here
 				            			try {
-			            	           		out.println("<li><a href=\"createPost\">Create post</a></li><li><a href=\"addMovie\">Add Movie</a></li>");
+			            	           		out.println("<li><a href=\"createPost\">Create post</a></li><li><a href=\"addmovie\">Add Movie</a></li>");
 				            			} catch (IOException e) {
 				            				// in case of error redirect to logout -> home
 				            				response.sendRedirect("logout");

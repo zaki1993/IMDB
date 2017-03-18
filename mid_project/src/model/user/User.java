@@ -175,6 +175,7 @@ public class User implements IUser{
 				
 				//todo LocalMovie temp = new Gson().fromJson(movieJson, LocalMovie.class);
 				System.out.println("IM HEER");
+				Gson x = new Gson();
 			}
 		} catch (IOException e) {
 			// TODO

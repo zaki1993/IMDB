@@ -1,4 +1,4 @@
-package exceptions;
+package model.exceptions;
 
 public class InvalidUserException extends Exception{
 	public InvalidUserException() {

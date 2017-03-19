@@ -2,13 +2,15 @@ package controller;
 
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import exceptions.InvalidUserException;
+import model.dao.UserDao;
+import model.exceptions.InvalidUserException;
 import model.user.User;
 
 /**
@@ -37,20 +39,21 @@ public class RegisterServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		String user = request.getParameter("username");
 		String password  = request.getParameter("password");
 		String age = request.getParameter("age");
-		String location = request.getParameter("location");
+		String location = request.getParameter("location");		
 		try{
-			if(age == null || age.isEmpty() || user == null || user.isEmpty() || password == null || password.isEmpty() || location == null || location.isEmpty()){
-				throw new IOException("Invalid register data!");
-			}
-			
-			User.register(user, password, (byte) Integer.parseInt(age), location);
+			User newUser = new User(user, (byte) Integer.parseInt(age), location, password);
+			UserDao.getInstance().addUser(newUser);
 			response.sendRedirect("registered.html");
 		} catch(InvalidUserException | IOException ex){
-			response.sendRedirect("index.html");
+			try {
+				response.sendRedirect("index.html");
+			} catch (IOException e) {
+				System.out.println("Register counld not redirect to index.html: " + e.getMessage());
+			}
 		}
 	}
 

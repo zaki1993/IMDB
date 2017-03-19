@@ -1,4 +1,5 @@
-<%@page import="db_connector.IMDbConnect"%>
+<%@page import="model.dao.UserDao"%>
+<%@page import="model.dao.IMDbConnect"%>
 <%@ page language="java" contentType="text/html; charset=windows-1256"
 	pageEncoding="windows-1256" import="java.io.IOException"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -33,14 +34,17 @@
 <title>IMDB</title>
 </head>
 <body>
- 	<% if(session == null || session.isNew() || IMDbConnect.loggedUsers == null || IMDbConnect.loggedUsers.isEmpty()){
+ 	<% if(session == null || session.isNew()){
  		// if the session is invalid then redirect
  		// if someone tries to call this file without permission then also redirect (TODO)
 	 		response.sendRedirect("index.html");
 	 		return;
  		}
  	%>
- 	<% String status = IMDbConnect.loggedUsers.get(session.getId()).getStatus(); %> <!-- use this status for privileges -->
+ 	<% 
+	 	String status = UserDao.getInstance().getLoggedUsers().get(session.getId()).getStatus();
+	 	System.out.println(status);
+ 	%> <!-- use this status for privileges -->
 	
 	<div class="container">
 	  <div class="row justify-content-md-center maincontainer">

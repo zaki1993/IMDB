@@ -1,11 +1,10 @@
 package model.movie;
 
 import java.time.LocalDate;
-
 import java.util.Collections;
 import java.util.HashSet;
 
-import exceptions.InvalidMovieException;
+import model.exceptions.InvalidMovieException;
 
 public class Movie {
 	

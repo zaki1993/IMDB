@@ -1,4 +1,4 @@
-package DataBase;
+package model.dao;
 
 import java.io.BufferedReader;
 import java.io.IOException;

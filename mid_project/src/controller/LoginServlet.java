@@ -3,22 +3,20 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionListener;
 
-import db_connector.IMDbConnect;
-import exceptions.InvalidUserException;
-import exceptions.UserNotFoundException;
+import model.dao.IMDbConnect;
+import model.dao.UserDao;
+import model.exceptions.InvalidUserException;
+import model.exceptions.UserNotFoundException;
 import model.user.User;
 
 /**
@@ -49,19 +47,26 @@ public class LoginServlet extends HttpServlet {
 		String user = request.getParameter("username");
 		String password = request.getParameter("password");
 		try{
-			User newUser = User.login(user, password);
-			HttpSession session = request.getSession(true);
-			IMDbConnect.loggedUsers.put(session.getId(), newUser); // add the logged user into collection with session id
-			session.setAttribute("IMDb_user", user);
-			session.setMaxInactiveInterval(30); // set session time 30 seconds
-			response.sendRedirect("userLogged.jsp"); //logged-in page 
-		} catch(InvalidUserException | UserNotFoundException | IOException ex){
+			if(UserDao.getInstance().validLogin(user, password)){
+				HttpSession session = request.getSession(true);
+				session.setAttribute("IMDb_user", user);
+				session.setMaxInactiveInterval(30); // set session time 30 seconds
+				UserDao.getInstance().getLoggedUsers().put(session.getId(), UserDao.getInstance().getAllUsers().get(user));
+				try {
+					response.sendRedirect("userLogged.jsp");
+				} catch (IOException e) {
+					System.out.println("Could not redirect to userLogged.jsp: " + e.getMessage());
+				}
+			}
+			else{
+				throw new UserNotFoundException();
+			}
+		} catch(InvalidUserException | UserNotFoundException ex){
 			// redirect to home page
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
             PrintWriter out;
 			try {
 				out = response.getWriter();
-
 	            out.println("<script> alert(\"Please make sure you enter a valid username or password.\") </script>");
 	            out.println("<script> window.location = 'http://localhost:8080/mid_project/index.html' </script>");
 			} catch (IOException e) {
@@ -74,6 +79,15 @@ public class LoginServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	@Override
+	public void destroy() {
+		try{
+			IMDbConnect.getInstance().getConnection().close();
+		} catch(SQLException ex){
+			System.out.println("LOGIN: Closing connection failed!");
 		}
 	}
 

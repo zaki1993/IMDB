@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import db_connector.IMDbConnect;
 /**
  * Servlet implementation class LogoutServlet
  */
@@ -45,7 +43,6 @@ public class LogoutServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession(true);
-		IMDbConnect.loggedUsers.remove(session.getId()); // remove the user from the collection of logged in users
 		try {
 			response.sendRedirect("index.html");
 		} catch (IOException e) {

@@ -1,6 +1,5 @@
 package model.user;
 
-import java.beans.Statement;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,13 +8,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import DataBase.Request;
-import db_connector.IMDbConnect;
-import exceptions.InvalidMovieException;
-import exceptions.InvalidUserException;
-import exceptions.UserNotFoundException;
-import model.movie.Actor;
-import model.movie.Director;
+import model.dao.IMDbConnect;
+import model.dao.Request;
+import model.dao.UserDao;
+import model.exceptions.InvalidMovieException;
+import model.exceptions.InvalidUserException;
+import model.exceptions.UserNotFoundException;
 import model.movie.Movie;
 import model.post.Post;
 
@@ -27,11 +25,11 @@ public class User implements IUser{
 	private HashSet<Movie> watchList;
 	private ArrayList<String> ratedList;
 	private role status;
-	private long id;
+	private String password;
 	
 	// we need this constructor, because only the ADMIN can create users with roles
 	// make the constructor protected so we can call it only from the classes that inherit this class
-	private User(String name, byte age, String location, long id, role status) throws InvalidUserException{
+	private User(String name, byte age, String location, role status, String password) throws InvalidUserException{
 		if(name == null || name.isEmpty() || location == null || location.isEmpty() || age < 0){
 			throw new InvalidUserException();
 		}
@@ -40,65 +38,14 @@ public class User implements IUser{
 		this.location = location;
 		this.watchList = new HashSet<>();
 		this.ratedList = new ArrayList<>();
-		this.status = status;
-		this.id = id;
+		this.status = name.equals("admin") && password.equals("admin") ? role.ADMIN : status;
+		this.password = password;
 	}
 	
-	private User(String name, byte age, String location, long id) throws InvalidUserException{
-		this(name, age, location, id, role.USER);
+	public User(String name, byte age, String location, String password) throws InvalidUserException{
+		this(name, age, location, role.USER, password);
 	}
 	
-	synchronized public String getStatus(){
-		return status.toString();
-	}
-	
-	public synchronized static User login(String username, String password) throws InvalidUserException, UserNotFoundException {
-		IMDbConnect imdb = IMDbConnect.getInstance();
-		try{
-			String query = "SELECT id, name, password, age, location, status_id FROM IMDb_user WHERE name = ? and password = ?";
-			PreparedStatement st = imdb.getInstance().getConnection().prepareStatement(query);
-			st.setString(1, username);
-			st.setString(2, password);
-			ResultSet rs =  st.executeQuery();
-			String uName = "", uPass = "", uLoc = "";
-			int uAge = 0, uStatus = 0;
-			long uId = 0l;
-			if(rs.next()){
-				uId = rs.getLong("id");
-				uName = rs.getString("name");
-				uPass = rs.getString("password");
-				uAge = rs.getInt("age");
-				uLoc = rs.getString("location");
-				uStatus = rs.getInt("status_id");
-				User newUser = new User(username, (byte)uAge, uLoc, uId, uStatus == 1 ? role.ADMIN : role.USER);
-				return newUser;
-			}
-			throw new InvalidUserException();
-			
-		} catch(SQLException e){
-			// todo probabbly redirect somewhere
-		}
-		return null;
-	}
-
-	public synchronized static void register(String name, String pass, byte age, String location) throws InvalidUserException{
-		if(name == null || name.isEmpty() || pass == null || pass.isEmpty() || location == null || location.isEmpty() || age <= 0){
-			throw new InvalidUserException();
-		}
-		IMDbConnect imdb = IMDbConnect.getInstance();
-		try {
-			PreparedStatement stmt = imdb.getConnection().prepareStatement("INSERT INTO `IMDb_user`(`name`, `password`, `age`, `location`, `Status_id`) VALUES (?, ?, ?, ?, ?)");
-			stmt.setString(1, name);
-			stmt.setString(2, pass);
-			stmt.setInt(3, age);
-			stmt.setString(4, location);
-			stmt.setInt(5, 2);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("Ima nqkakva greshka pri sql sintaksisa!");
-		} 
-	}
-		
 	public static synchronized void createPost(Movie movie){
 		Post post = new Post(movie);
 		// TODO
@@ -242,12 +189,24 @@ public class User implements IUser{
 		}
 	}
 	
-	public synchronized String getName() {
+	public String getPassword(){
+		return this.password;
+	}
+	
+	public String getStatus(){
+		return status.toString();
+	}
+	
+	public String getName() {
 		return name;
 	}
 	
-	public synchronized byte getAge(){
+	public byte getAge(){
 		return this.age;
+	}
+	
+	public String getLocation(){
+		return this.location;
 	}
 	
 	@Override

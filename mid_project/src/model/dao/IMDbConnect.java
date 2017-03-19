@@ -1,5 +1,4 @@
-package db_connector;
-
+package model.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,8 +14,6 @@ public class IMDbConnect {
 	private static IMDbConnect imdb = null;
 	private Connection con = null;
 
-	public static Hashtable<String, User> loggedUsers = new Hashtable<>(); // hashtable<sessionID, user>
-	
 	private IMDbConnect(){
 		try{
 			Class.forName("com.mysql.jdbc.Driver");

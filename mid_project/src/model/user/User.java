@@ -102,8 +102,9 @@ public class User implements IUser{
 					stmt.setString(5, movie);
 					stmt.executeUpdate();
 					ResultSet rSet = stmt.getGeneratedKeys();
-					rSet.next();
-					movieId = rSet.getLong(1);
+					while(rSet.next()){
+						movieId = rSet.getLong(1);
+					}
 				} catch(SQLException ex){
 					// dublicate fields
 					// nothing to do
@@ -120,8 +121,9 @@ public class User implements IUser{
 						stmt.setString(1, director);
 						stmt.executeUpdate();
 						ResultSet rSet = stmt.getGeneratedKeys();
-						rSet.next();
-						directorId = rSet.getLong(1);
+						while(rSet.next()){
+							directorId = rSet.getLong(1);
+						}
 						
 						// now fill the director_movie table
 						query = "INSERT IGNORE INTO `IMDb_director_movie` (`director_id`, `movie_id`) VALUES (?, ?)";
@@ -147,7 +149,9 @@ public class User implements IUser{
 						stmt.setString(1, actors[i]);
 						stmt.executeUpdate();
 						ResultSet rSet = stmt.getGeneratedKeys();
-						actorId = rSet.getLong(1);
+						while(rSet.next()){
+							actorId = rSet.getLong(1);
+						}
 						
 						// fill actor_movie table
 						query = "INSERT IGNORE INTO `IMDb_actor_movie` (`actor_id`, `movie_id`) VALUES (?, ?)";
@@ -174,7 +178,9 @@ public class User implements IUser{
 						stmt.setString(1, genres[i]);
 						stmt.executeUpdate();
 						ResultSet rSet = stmt.getGeneratedKeys();
-						genreName = rSet.getString(1);
+						while(rSet.next()){
+							genreName = rSet.getString(1);
+						}
 						
 						// fill genre_movie table
 						query = "INSERT IGNORE INTO `IMDb_genre_movie` (`genre_name`, `movie_id`) VALUES (?, ?)";

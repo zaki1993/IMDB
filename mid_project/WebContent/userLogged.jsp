@@ -5,8 +5,8 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<link rel="stylesheet" type="text/css" href="https://bootswatch.com/sandstone/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="styles/style.css">
+	<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
 		
 	  <style>
 	    label, input { display:block; }
@@ -29,7 +29,6 @@
 			background-color: white;
 			height: 100vh;
 		}
-		
 	</style>
 <title>IMDB</title>
 </head>
@@ -76,7 +75,7 @@
 		            			// put admin functionality here
 		            			try { %>
 		            				<li>
-		            				<a>Create post</a>
+		            				<a id="create-post">Create post</a>
 		            				</li>
 		            				<li>
 		            				<a id="add-movie">Add Movie</a>
@@ -113,20 +112,33 @@
 			          </li>
 			          </ul>
 		        	<div>
-		        	
-		        	<% if(status.equals("ADMIN")){
-		        		//<!-- Add new movie field -->
-					  	out.println("<div id=\"dialog-form\" title=\"Add new movie!\">");
-					  	out.println("<form action=\"addmovie\" type=\"post\">");
-					  	out.println("Movie name");
-			  			out.println("<input type=\"text\" name=\"movie-name\" placeholder=\"Movie name\" class=\"text ui-widget-content ui-corner-all\">");
-			  			out.println("<input class=\"btn btn-primary btn-sm col-md-5\" type=\"submit\" value=\"Add movie\"></input>");
-			  			out.println("</form>");
-			  			out.println("</div>");
-		        	}
-					%>
-			  </div>
-			</nav>
+			        	<% if(status.equals("ADMIN")){ %>
+			        		//<!-- Add new movie field -->
+						  	<div id="dialog-form" title="Add new movie!">
+						  	<form action="addmovie" type="post">
+						  	Movie name
+				  			<input type="text" name="movie-name" placeholder="Movie name" class="text ui-widget-content ui-corner-all">
+				  			<input class="btn btn-primary btn-sm col-md-5" type="submit" value="Add movie"></input>
+				  			</form>
+				  			</div>
+			  			<%
+		        			}
+						%>
+						
+						<% if(status.equals("ADMIN")){ %>
+			        		//<!-- Create new post field -->
+						  	<div id="dialog-form1" title="Create new post!">
+						  	<form action="createpost" type="post">
+						  	Movie name
+				  			<input type="text" name="movie-name" placeholder="Movie name" class="text ui-widget-content ui-corner-all">
+				  			<input class="btn btn-primary btn-sm col-md-5" type="submit" value="Create post"></input>
+				  			</form>
+				  			</div>
+			  			<%
+		        			}
+						%>
+		  			</div>
+				</nav>
 			</nav>
 		   </div>
 	    </div>
@@ -134,9 +146,9 @@
 	</div>
 	
 	<!--  SCRIPTS  -->
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-	<script type="text/javascript" src="https://bootswatch.com/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script type="text/javascript" src="lib/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="lib/bootstrap.min.js"></script>
+  	<script src="lib/jquery-ui.js"></script>
     <script>
 	  $( function() {
 	    var dialog = $( "#dialog-form" ).dialog({
@@ -150,6 +162,19 @@
 	      dialog.dialog( "open" );
 	    });
 	  } );
+	  
+	  $( function() {
+		    var dialog = $( "#dialog-form1" ).dialog({
+		      autoOpen: false,
+		      height: 350,
+		      width: 300,
+		      modal: true
+		    });
+		 
+		    $( "#create-post" ).button().on( "click", function() {
+		      dialog.dialog( "open" );
+		    });
+		  } );
 	</script>
 </body>
 </html>

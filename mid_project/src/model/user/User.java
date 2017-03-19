@@ -48,7 +48,7 @@ public class User implements IUser{
 		this(name, age, location, id, role.USER);
 	}
 	
-	public String getStatus(){
+	synchronized public String getStatus(){
 		return status.toString();
 	}
 	
@@ -104,7 +104,7 @@ public class User implements IUser{
 		// TODO
 	}
 	
-	private static String customGsonParser(String json, String name){
+	private synchronized static String customGsonParser(String json, String name){
 		String temp = json.substring(json.indexOf(name) + name.length() + 3);
 		return temp.substring(0, temp.indexOf("\""));
 	}
@@ -132,38 +132,14 @@ public class User implements IUser{
 			else{
 				IMDbConnect imdb = IMDbConnect.getInstance();
 				PreparedStatement stmt;
-				// add the director
-				String director = User.customGsonParser(movieJson, "Director");
-					try {
-						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_director`(`name`) VALUES (?)");
-						stmt.setString(1, director);
-						stmt.executeUpdate();
-					} catch (SQLException ex) {
-						// dublicate fields
-						// nothing to do
-						// we set them to be unique
-						System.out.println("Director: " + ex);
-					}
-				// add all the actors
-				String[] actors = User.customGsonParser(movieJson, "Actors").split(", ");
-				for(int i = 0; i < actors.length; i++){
-					try{
-						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_actor`(`name`) VALUES (?)");
-						stmt.setString(1, actors[i]);
-						stmt.executeUpdate();
-					} catch(SQLException ex){
-						// dublicate fields
-						// nothing to do
-						// we set them to be unique
-						System.out.println("Actor: " + ex);
-					}
-				}
-				// add the movie
+				
+				// first add the movie
 				String movie = User.customGsonParser(movieJson, "Title");
 				String poster = User.customGsonParser(movieJson, "Poster");
 				String rating = User.customGsonParser(movieJson, "imdbRating");
 				String description = User.customGsonParser(movieJson, "Plot");
 				String date = User.customGsonParser(movieJson, "Released");
+				long movieId = 0;
 				if(rating.equals("N/A")){
 					rating = "0";
 				}
@@ -175,19 +151,80 @@ public class User implements IUser{
 					stmt.setString(4, date);
 					stmt.setString(5, movie);
 					stmt.executeUpdate();
+					ResultSet rSet = stmt.getGeneratedKeys();
+					rSet.next();
+					movieId = rSet.getLong(1);
 				} catch(SQLException ex){
 					// dublicate fields
 					// nothing to do
 					// we set them to be unique
 					System.out.println("Movie: " + ex);
 				}
+				
+				// add the director
+				String director = User.customGsonParser(movieJson, "Director");
+					try {
+						long directorId = 0;
+						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_director`(`name`) VALUES (?)");
+						stmt.setString(1, director);
+						stmt.executeUpdate();
+						ResultSet rSet = stmt.getGeneratedKeys();
+						rSet.next();
+						directorId = rSet.getLong(1);
+						
+						// now fill the director_movie table
+						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_director_movie` (`director_id`, `movie_id`) VALUES (?, ?)");
+						stmt.setLong(1, directorId);
+						stmt.setLong(2, movieId);
+						stmt.executeUpdate();
+						
+					} catch (SQLException ex) {
+						// dublicate fields
+						// nothing to do
+						// we set them to be unique
+						System.out.println("Director: " + ex);
+					}
+				
+				// add all the actors
+				String[] actors = User.customGsonParser(movieJson, "Actors").split(", ");
+				for(int i = 0; i < actors.length; i++){
+					try{
+						long actorId = 0;
+						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_actor`(`name`) VALUES (?)");
+						stmt.setString(1, actors[i]);
+						stmt.executeUpdate();
+						ResultSet rSet = stmt.getGeneratedKeys();
+						actorId = rSet.getLong(1);
+						
+						// fill actor_movie table
+						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_actor_movie` (`actor_id`, `movie_id`) VALUES (?, ?)");
+						stmt.setLong(1, actorId);
+						stmt.setLong(2, movieId);
+						stmt.executeUpdate();
+					} catch(SQLException ex){
+						// dublicate fields
+						// nothing to do
+						// we set them to be unique
+						System.out.println("Actor: " + ex);
+					}
+				}
+		
 				// add genres
 				String genre = User.customGsonParser(movieJson, "Genre");
 				String[] genres = genre.split(", ");
 				for(int i = 0; i < genres.length; i++){
 					try{
+						String genreName;
 						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_genre`(`name`) VALUES (?)");
 						stmt.setString(1, genres[i]);
+						stmt.executeUpdate();
+						ResultSet rSet = stmt.getGeneratedKeys();
+						genreName = rSet.getString(1);
+						
+						// fill genre_movie table
+						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_genre_movie` (`genre_name`, `movie_id`) VALUES (?, ?)");
+						stmt.setString(1, genreName);
+						stmt.setLong(2, movieId);
 						stmt.executeUpdate();
 					} catch(SQLException ex){
 						// dublicate fields
@@ -196,109 +233,25 @@ public class User implements IUser{
 						System.out.println("Genre: " + ex);
 					}
 				}
-				
-				// get movie id
-
-				int movie_id = 0;
-				try{
-					// todo fix this
-					
-					stmt = imdb.getInstance().getConnection().prepareStatement("SELECT id FROM IMDb_movie WHERE name = ?");
-					stmt.setString(1, movie);
-					ResultSet rs1 = stmt.executeQuery();
-					rs1.next();
-					movie_id = rs1.getInt("id");
-				} catch(SQLException ex){
-					// dublicate fields
-					// nothing to do
-					// we set them to be unique
-					System.out.println("Movie id table: " + ex);
-				}
-				
-				// fill genre movie table
-				for(int i = 0; i < genres.length; i++){
-					try{					
-						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_genre_movie` (`genre_name`, `movie_id`) VALUES (?, ?)");
-						stmt.setString(1, genres[i]);
-						stmt.setInt(2, movie_id);
-						stmt.executeUpdate();
-					} catch(SQLException ex){
-						// dublicate fields
-						// nothing to do
-						// we set them to be unique
-						System.out.println("Genre_Movie: " + ex);
-					}
-				}
-				
-				// fill movie director table
-				int director_id = 0;
-				try{
-					// todo fix this
-					
-					stmt = imdb.getInstance().getConnection().prepareStatement("SELECT id FROM IMDb_director WHERE name = ?");
-					stmt.setString(1, director);
-					ResultSet rs1 = stmt.executeQuery();
-					rs1.next();
-					director_id = rs1.getInt("id");
-				} catch(SQLException ex){
-					// dublicate fields
-					// nothing to do
-					// we set them to be unique
-					System.out.println("Movie id table: " + ex);
-				}
-				
-				try{
-					stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_director_movie` (`director_id`, `movie_id`) VALUES (?, ?)");
-					stmt.setInt(1, director_id);
-					stmt.setInt(2, movie_id);
-					stmt.executeUpdate();
-				} catch(SQLException ex){
-					// dublicate fields
-					// nothing to do
-					// we set them to be unique
-					System.out.println("Director_Movie: " + ex);
-				}
-				
-				// fill movie actor table
-				for(int i = 0; i < actors.length; i++){
-					int actor_id = 0;
-					try{
-						stmt = imdb.getInstance().getConnection().prepareStatement("SELECT id FROM IMDb_actor WHERE name = ?");
-						stmt.setString(1, actors[i]);
-						ResultSet rs1 = stmt.executeQuery();
-						rs1.next();
-						actor_id = rs1.getInt("id");
-						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_actor_movie` (`actor_id`, `movie_id`) VALUES (?, ?)");
-						stmt.setInt(1, actor_id);
-						stmt.setInt(2, movie_id);
-						stmt.executeUpdate();
-					} catch(SQLException ex){
-						// dublicate fields
-						// nothing to do
-						// we set them to be unique
-						System.out.println("Actor_Movie: " + ex);
-					}
-					
-				}
 			}
 		} catch (IOException e) {
 			// TODO
 			e.printStackTrace();
 		} catch (InvalidMovieException e){
-			System.out.println("Ne e nameren film, trqbwa da go oprawim!");
+			System.out.println("Error occured: " + e.getMessage());
 		}
 	}
 	
-	public String getName() {
+	public synchronized String getName() {
 		return name;
 	}
 	
-	public byte getAge(){
+	public synchronized byte getAge(){
 		return this.age;
 	}
 	
 	@Override
-	public boolean vote(Movie toRate, int vote) {
+	public synchronized boolean vote(Movie toRate, int vote) {
 		if (ratedList.contains(toRate.getName())) {
 			System.out.println("Already voted for that movie!");
 			return false;
@@ -308,7 +261,7 @@ public class User implements IUser{
 	}
 	
 	@Override
-	public boolean comment(Post post, String msg) {
+	public synchronized boolean comment(Post post, String msg) {
 		if (post == null) {
 			System.out.println("No such post!");
 			return false;
@@ -322,7 +275,7 @@ public class User implements IUser{
 	}
 	
 	@Override
-	public boolean addToWatchList(Movie toAdd) {
+	public synchronized boolean addToWatchList(Movie toAdd) {
 		if(toAdd == null){
 			System.out.println("No such movie!");
 			return false;

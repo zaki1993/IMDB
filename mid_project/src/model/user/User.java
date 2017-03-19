@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.mysql.jdbc.Statement;
+
 import model.dao.IMDbConnect;
 import model.dao.Request;
 import model.dao.UserDao;
@@ -91,7 +93,8 @@ public class User implements IUser{
 					rating = "0";
 				}
 				try{
-					stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_movie`(`poster`, `rating`, `description`, `date`, `name`) VALUES (?, ?, ?, ?, ?)");
+					String query = "INSERT IGNORE INTO `IMDb_movie`(`poster`, `rating`, `description`, `date`, `name`) VALUES (?, ?, ?, ?, ?)";
+					stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 					stmt.setString(1, poster);
 					stmt.setDouble(2, Double.parseDouble(rating));
 					stmt.setString(3, description);
@@ -112,7 +115,8 @@ public class User implements IUser{
 				String director = User.customGsonParser(movieJson, "Director");
 					try {
 						long directorId = 0;
-						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_director`(`name`) VALUES (?)");
+						String query = "INSERT IGNORE INTO `IMDb_director`(`name`) VALUES (?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 						stmt.setString(1, director);
 						stmt.executeUpdate();
 						ResultSet rSet = stmt.getGeneratedKeys();
@@ -120,7 +124,8 @@ public class User implements IUser{
 						directorId = rSet.getLong(1);
 						
 						// now fill the director_movie table
-						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_director_movie` (`director_id`, `movie_id`) VALUES (?, ?)");
+						query = "INSERT IGNORE INTO `IMDb_director_movie` (`director_id`, `movie_id`) VALUES (?, ?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query);
 						stmt.setLong(1, directorId);
 						stmt.setLong(2, movieId);
 						stmt.executeUpdate();
@@ -137,14 +142,16 @@ public class User implements IUser{
 				for(int i = 0; i < actors.length; i++){
 					try{
 						long actorId = 0;
-						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_actor`(`name`) VALUES (?)");
+						String query = "INSERT IGNORE INTO `IMDb_actor`(`name`) VALUES (?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 						stmt.setString(1, actors[i]);
 						stmt.executeUpdate();
 						ResultSet rSet = stmt.getGeneratedKeys();
 						actorId = rSet.getLong(1);
 						
 						// fill actor_movie table
-						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_actor_movie` (`actor_id`, `movie_id`) VALUES (?, ?)");
+						query = "INSERT IGNORE INTO `IMDb_actor_movie` (`actor_id`, `movie_id`) VALUES (?, ?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query);
 						stmt.setLong(1, actorId);
 						stmt.setLong(2, movieId);
 						stmt.executeUpdate();
@@ -161,15 +168,17 @@ public class User implements IUser{
 				String[] genres = genre.split(", ");
 				for(int i = 0; i < genres.length; i++){
 					try{
-						String genreName;
-						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_genre`(`name`) VALUES (?)");
+						String genreName = null;
+						String query = "INSERT IGNORE INTO `IMDb_genre`(`name`) VALUES (?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 						stmt.setString(1, genres[i]);
 						stmt.executeUpdate();
 						ResultSet rSet = stmt.getGeneratedKeys();
 						genreName = rSet.getString(1);
 						
 						// fill genre_movie table
-						stmt = imdb.getInstance().getConnection().prepareStatement("INSERT IGNORE INTO `IMDb_genre_movie` (`genre_name`, `movie_id`) VALUES (?, ?)");
+						query = "INSERT IGNORE INTO `IMDb_genre_movie` (`genre_name`, `movie_id`) VALUES (?, ?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query);
 						stmt.setString(1, genreName);
 						stmt.setLong(2, movieId);
 						stmt.executeUpdate();
@@ -249,25 +258,16 @@ public class User implements IUser{
 	}
 
 	@Override
-	public String toString() {
-		String str = "name: " + name + "\nage: " + age + "\nlocation: " + location + "\nwatchList: ";
-		for (Iterator iterator = watchList.iterator(); iterator.hasNext();) {
-			Movie m = (Movie) iterator.next();
-			if (!iterator.hasNext()) {
-				str += m.getName();
-			} else {
-				str = str + m.getName() + ", ";
-			}
-		}
-		return str;
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + age;
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((ratedList == null) ? 0 : ratedList.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((watchList == null) ? 0 : watchList.hashCode());
 		return result;
 	}
 
@@ -282,12 +282,42 @@ public class User implements IUser{
 		User other = (User) obj;
 		if (age != other.age)
 			return false;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (ratedList == null) {
+			if (other.ratedList != null)
+				return false;
+		} else if (!ratedList.equals(other.ratedList))
+			return false;
+		if (status != other.status)
+			return false;
+		if (watchList == null) {
+			if (other.watchList != null)
+				return false;
+		} else if (!watchList.equals(other.watchList))
+			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", age=" + age + ", location=" + location + ", watchList=" + watchList
+				+ ", ratedList=" + ratedList + ", status=" + status + ", password=" + password + "]";
+	}
+	
+	
 	
 }

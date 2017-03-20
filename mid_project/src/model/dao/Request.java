@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-//Downloads info from Internet
+// Creates request to IMDB api and pulls information about the movie!
 
 public class Request {
 	private Request(){

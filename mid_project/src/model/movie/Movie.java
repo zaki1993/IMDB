@@ -70,7 +70,7 @@ public class Movie {
 		return description;
 	}
 
-	public LocalDate getDate() {
+	public Date getDate() {
 		return date;
 	}
 

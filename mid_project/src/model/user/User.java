@@ -4,18 +4,14 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-
-import com.mysql.jdbc.Statement;
 
 import model.dao.IMDbConnect;
 import model.dao.Request;
-import model.dao.UserDao;
 import model.exceptions.InvalidMovieException;
 import model.exceptions.InvalidUserException;
-import model.exceptions.UserNotFoundException;
 import model.movie.Movie;
 import model.post.Post;
 

@@ -8,10 +8,15 @@ public class Post {
 	
 	private Movie movie;
 	private ArrayList<String> comments;
+	private long id;
 	
 	public Post(Movie movie) {
 		this.movie = movie;
 		this.comments = new ArrayList<>();
+	}
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	public void addComment(User user, String msg){

@@ -1,7 +1,9 @@
 package model.movie;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 
 import model.exceptions.InvalidMovieException;
@@ -17,11 +19,11 @@ public class Movie {
 	private HashSet<Actor> actors;
 	private HashSet<Director> directors;
 	private String description;
-	private LocalDate date;
+	private Date date;
 	private int idx;
 	
-	public Movie(String name, String poster, String[] genres, HashSet<Actor> actors,
-			HashSet<Director> scenaristi, String description, LocalDate date) throws InvalidMovieException {
+	public Movie(String name, String poster, ArrayList<String> genres, HashSet<Actor> actors,
+			HashSet<Director> scenaristi, String description, Date date) throws InvalidMovieException {
 		if(name == null || name.isEmpty() || poster == null || poster.isEmpty() || genres == null || date == null){
 			throw new InvalidMovieException();
 		}

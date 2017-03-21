@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.dao.MovieDAO;
 import model.user.User;
 
 /**
@@ -35,7 +36,7 @@ public class AddMovieServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//todo validation and other stuff
-		User.addMovie(request.getParameter("movie-name"));
+		MovieDAO.getInstance().addMovie(request.getParameter("movie-name"));
 		response.sendRedirect("userLogged.jsp");
 	}
 

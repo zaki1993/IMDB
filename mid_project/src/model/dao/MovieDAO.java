@@ -1,12 +1,16 @@
 package model.dao;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+
+import org.apache.catalina.tribes.util.Arrays;
 
 import model.exceptions.InvalidMovieException;
 import model.movie.Actor;
@@ -78,8 +82,170 @@ public class MovieDAO {
 		}
 		return instance;
 	}
+
+	private synchronized static String customGsonParser(String json, String name){
+		String temp = json.substring(json.indexOf(name) + name.length() + 3);
+		return temp.substring(0, temp.indexOf("\""));
+	}
 	
-	private HashMap<String, Movie> allMovies() {
+	public synchronized void addMovie(String name){
+		String[] names = name.split(" ");
+		StringBuilder link = new StringBuilder("http://www.omdbapi.com/?t=");
+		for (int i = 0; i < names.length; i++) {
+			if(i == 0){
+				link.append(names[i]);
+				continue;
+			}
+			link.append("+");
+			link.append(names[i]);
+		}
+		try {
+			String movieJson = Request.read(link.toString());
+			
+			System.out.println(movieJson);
+			
+			String rs = movieJson.substring(movieJson.indexOf("\"Response\":\""));			
+			if(rs.contains("False")){
+				throw new InvalidMovieException();
+			}
+			else{
+				IMDbConnect imdb = IMDbConnect.getInstance();
+				PreparedStatement stmt;
+				
+				// first add the movie
+				String movie = customGsonParser(movieJson, "Title");
+				String poster = customGsonParser(movieJson, "Poster");
+				String rating = customGsonParser(movieJson, "imdbRating");
+				String description = customGsonParser(movieJson, "Plot");
+				String date = customGsonParser(movieJson, "Released");
+				long movieId = 0;
+				if(rating.equals("N/A")){
+					rating = "0";
+				}
+				try{
+					String query = "INSERT IGNORE INTO `IMDb_movie`(`poster`, `rating`, `description`, `date`, `name`) VALUES (?, ?, ?, ?, ?)";
+					stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+					stmt.setString(1, poster);
+					stmt.setDouble(2, Double.parseDouble(rating));
+					stmt.setString(3, description);
+					stmt.setString(4, date);
+					stmt.setString(5, movie);
+					stmt.executeUpdate();
+					ResultSet rSet = stmt.getGeneratedKeys();
+					while(rSet.next()){
+						movieId = rSet.getLong(1);
+					}
+				} catch(SQLException ex){
+					// dublicate fields
+					// nothing to do
+					// we set them to be unique
+					System.out.println("Movie: " + ex);
+				}
+				
+				// add the director
+				String director = customGsonParser(movieJson, "Director");
+					try {
+						long directorId = 0;
+						String query = "INSERT IGNORE INTO `IMDb_director`(`name`) VALUES (?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+						stmt.setString(1, director);
+						stmt.executeUpdate();
+						ResultSet rSet = stmt.getGeneratedKeys();
+						while(rSet.next()){
+							directorId = rSet.getLong(1);
+						}
+						
+						// now fill the director_movie table
+						query = "INSERT IGNORE INTO `IMDb_director_movie` (`director_id`, `movie_id`) VALUES (?, ?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query);
+						stmt.setLong(1, directorId);
+						stmt.setLong(2, movieId);
+						stmt.executeUpdate();
+						
+					} catch (SQLException ex) {
+						// dublicate fields
+						// nothing to do
+						// we set them to be unique
+						System.out.println("Director: " + ex);
+					}
+				
+				// add all the actors
+				String[] actors = customGsonParser(movieJson, "Actors").split(", ");
+				for(int i = 0; i < actors.length; i++){
+					try{
+						long actorId = 0;
+						String query = "INSERT IGNORE INTO `IMDb_actor`(`name`) VALUES (?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+						stmt.setString(1, actors[i]);
+						stmt.executeUpdate();
+						ResultSet rSet = stmt.getGeneratedKeys();
+						while(rSet.next()){
+							actorId = rSet.getLong(1);
+						}
+						
+						// fill actor_movie table
+						query = "INSERT IGNORE INTO `IMDb_actor_movie` (`actor_id`, `movie_id`) VALUES (?, ?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query);
+						stmt.setLong(1, actorId);
+						stmt.setLong(2, movieId);
+						stmt.executeUpdate();
+					} catch(SQLException ex){
+						// dublicate fields
+						// nothing to do
+						// we set them to be unique
+						System.out.println("Actor: " + ex);
+					}
+				}
+		
+				// add genres
+				String genre = customGsonParser(movieJson, "Genre");
+				String[] genres = genre.split(", ");
+				for(int i = 0; i < genres.length; i++){
+					try{
+						String genreName = null;
+						String query = "INSERT IGNORE INTO `IMDb_genre`(`name`) VALUES (?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+						stmt.setString(1, genres[i]);
+						stmt.executeUpdate();
+						ResultSet rSet = stmt.getGeneratedKeys();
+						while(rSet.next()){
+							genreName = rSet.getString(1);
+						}
+						
+						// fill genre_movie table
+						query = "INSERT IGNORE INTO `IMDb_genre_movie` (`genre_name`, `movie_id`) VALUES (?, ?)";
+						stmt = imdb.getInstance().getConnection().prepareStatement(query);
+						stmt.setString(1, genreName);
+						stmt.setLong(2, movieId);
+						stmt.executeUpdate();
+					} catch(SQLException ex){
+						// dublicate fields
+						// nothing to do
+						// we set them to be unique
+						System.out.println("Genre: " + ex);
+					}
+				}
+				ArrayList<String> genresArray = new ArrayList<>();
+				for(String i : genres){
+					genresArray.add(i);
+				}
+				HashSet<Actor> actorsHash = new HashSet<>();
+				for(String i : actors){
+					actorsHash.add(new Actor(i));
+				}
+				HashSet<Director> directorsHash = new HashSet<>();
+				directorsHash.add(new Director(director));
+				allMovies.put(movie, new Movie(movie, poster, genresArray, actorsHash, directorsHash, description, new java.util.Date(date)));
+			}
+		} catch (IOException e) {
+			System.out.println("In movie!");
+			e.printStackTrace();
+		} catch (InvalidMovieException e){
+			System.out.println("Error occured: " + e.getMessage());
+		}
+	}
+	
+	public synchronized HashMap<String, Movie> allMovies() {
 		return allMovies;
 	}
 	

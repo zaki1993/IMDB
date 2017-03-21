@@ -23,7 +23,7 @@ public class Movie {
 	private int idx;
 	
 	public Movie(String name, String poster, ArrayList<String> genres, HashSet<Actor> actors,
-			HashSet<Director> scenaristi, String description, Date date) throws InvalidMovieException {
+			HashSet<Director> directors, String description, Date date) throws InvalidMovieException {
 		if(name == null || name.isEmpty() || poster == null || poster.isEmpty() || genres == null || date == null){
 			throw new InvalidMovieException();
 		}
@@ -35,7 +35,7 @@ public class Movie {
 		}
 		this.rating = 0;
 		this.actors = actors;
-		this.directors = scenaristi;
+		this.directors = directors;
 		this.description = description;
 		this.date = date;
 		this.idx = Movie.id++;
@@ -63,7 +63,7 @@ public class Movie {
 	}
 
 	public HashSet<Director> getDirectors() {
-		return (HashSet<Director>) Collections.unmodifiableCollection(this.directors);
+		return this.directors;
 	}
 
 	public String getDescription() {

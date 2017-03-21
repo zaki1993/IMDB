@@ -12,15 +12,15 @@ import model.exceptions.InvalidUserException;
 import model.user.User;
 import model.user.User.role;
 
-public class UserDAO{
-	private static UserDAO instance = null;
+public class UserDao{
+	private static UserDao instance = null;
 	private static HashMap<String, User> loggedUsers = new HashMap<>();
 	private static final HashMap<String, User> allUsers = new HashMap<>();
-	private UserDAO(){
+	private UserDao(){
 	}
-	public static synchronized UserDAO getInstance(){
+	public static synchronized UserDao getInstance(){
 		if(instance == null){
-			instance = new UserDAO();
+			instance = new UserDao();
 			if(allUsers.isEmpty()){
 				String query = "SELECT name, password, age, location FROM IMDb_user";
 				try {

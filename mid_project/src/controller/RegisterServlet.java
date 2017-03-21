@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.dao.UserDAO;
+import model.dao.UserDao;
 import model.exceptions.InvalidUserException;
 import model.user.User;
 
@@ -46,7 +46,7 @@ public class RegisterServlet extends HttpServlet {
 		String location = request.getParameter("location");		
 		try{
 			User newUser = new User(user, (byte) Integer.parseInt(age), location, password);
-			UserDAO.getInstance().addUser(newUser);
+			UserDao.getInstance().addUser(newUser);
 			response.sendRedirect("registered.html");
 		} catch(InvalidUserException | IOException ex){
 			try {

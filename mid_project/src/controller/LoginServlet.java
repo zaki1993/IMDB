@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.dao.IMDbConnect;
-import model.dao.UserDAO;
+import model.dao.UserDao;
 import model.exceptions.InvalidUserException;
 import model.exceptions.UserNotFoundException;
 import model.user.User;
@@ -47,11 +47,11 @@ public class LoginServlet extends HttpServlet {
 		String user = request.getParameter("username");
 		String password = request.getParameter("password");
 		try{
-			if(UserDAO.getInstance().validLogin(user, password)){
+			if(UserDao.getInstance().validLogin(user, password)){
 				HttpSession session = request.getSession(true);
 				session.setAttribute("IMDb_user", user);
 				session.setMaxInactiveInterval(30); // set session time 30 seconds
-				UserDAO.getInstance().getLoggedUsers().put(session.getId(), UserDAO.getInstance().getAllUsers().get(user));
+				UserDao.getInstance().getLoggedUsers().put(session.getId(), UserDao.getInstance().getAllUsers().get(user));
 				try {
 					response.sendRedirect("userLogged.jsp");
 				} catch (IOException e) {

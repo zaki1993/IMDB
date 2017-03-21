@@ -1,4 +1,4 @@
-<%@page import="model.dao.UserDAO"%>
+<%@page import="model.dao.UserDao"%>
 <%@page import="model.dao.IMDbConnect"%>
 <%@ page language="java" contentType="text/html; charset=windows-1256"
 	pageEncoding="windows-1256" import="java.io.IOException"%>
@@ -42,7 +42,7 @@
  		}
  	%>
  	<% 
-	 	String status = UserDAO.getInstance().getLoggedUsers().get(session.getId()).getStatus();
+	 	String status = UserDao.getInstance().getLoggedUsers().get(session.getId()).getStatus();
 	 	System.out.println(status);
  	%> <!-- use this status for privileges -->
 	

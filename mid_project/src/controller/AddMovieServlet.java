@@ -35,7 +35,6 @@ public class AddMovieServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//todo validation and other stuff
-		
 		User.addMovie(request.getParameter("movie-name"));
 		response.sendRedirect("userLogged.jsp");
 	}

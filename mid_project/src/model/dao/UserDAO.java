@@ -3,7 +3,10 @@ package model.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import model.exceptions.InvalidUserException;
 import model.user.User;
@@ -74,7 +77,7 @@ public class UserDAO{
 	}
 	
 	public synchronized HashMap<String, User> getLoggedUsers(){
-		return loggedUsers;
+		return (HashMap<String, User>) Collections.unmodifiableMap(loggedUsers);
 	}
 	
 }

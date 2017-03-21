@@ -79,6 +79,10 @@ public class MovieDAO {
 		return instance;
 	}
 	
+	private HashMap<String, Movie> allMovies() {
+		return allMovies;
+	}
+	
 	
 }
 

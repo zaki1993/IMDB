@@ -30,7 +30,10 @@ public class IMDbConnect {
 	}
 	
 	public synchronized Connection getConnection(){
-		return IMDbConnect.getInstance().con;
+		if(idmb == null){
+			getInstance();
+		}
+		return IMDbConnect.imdb.con;
 	}
 	
 	public synchronized static IMDbConnect getInstance(){

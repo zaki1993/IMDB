@@ -40,22 +40,18 @@ public class PostDAO {
 				postId = rSet.getLong(1);
 			}
 		} catch(SQLException ex){
-			System.out.println("Post: " + ex);
+			System.out.println("PostDAO -> Post: " + ex);
 		}
 		//Add to imdb_movie_post
 		try{
 			String query = "INSERT INTO imdb_movie_post (Movie_id, Post_id) VALUES( ?, ?)";
 			stmt = imdb.getInstance().getConnection().prepareStatement(query);
-//			stmt.setLong(1, movie.get);
+			stmt.setLong(1, movie.getId());
+			stmt.setLong(2, postId);
 			stmt.executeUpdate();
-			ResultSet rSet = stmt.getGeneratedKeys();
-			while(rSet.next()){
-				postId = rSet.getLong(1);
-			}
 		} catch(SQLException ex){
-			System.out.println("Post: " + ex);
+			System.out.println("PostDAO -> Movie_post: " + ex);
 		}
-		
 	}
 
 }

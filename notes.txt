@@ -24,3 +24,5 @@ DONE:
 2. Добавяне на нови 2 класа Admin и CommonUser
    - CommonUser ще вика метода register
    - Admin ще може да promote- ва и demote- ва юзъри
+   
+NOTE! : Направил съм някои промени по басата данни   

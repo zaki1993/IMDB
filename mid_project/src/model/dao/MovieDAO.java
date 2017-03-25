@@ -7,10 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-
-import org.apache.catalina.tribes.util.Arrays;
+import java.util.Map;
 
 import model.exceptions.InvalidMovieException;
 import model.movie.Actor;
@@ -245,8 +245,8 @@ public class MovieDAO {
 		}
 	}
 	
-	public synchronized HashMap<String, Movie> allMovies() {
-		return allMovies;
+	public synchronized Map<String, Movie> allMovies() {
+		return Collections.unmodifiableMap(allMovies);
 	}
 	
 	

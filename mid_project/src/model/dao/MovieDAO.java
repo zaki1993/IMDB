@@ -70,6 +70,7 @@ public class MovieDAO {
 						}
 						try {
 							newMovie = new Movie(name, poster, genresList, actors, scenaristi, descr, date);
+							newMovie.setId(id);
 						} catch (InvalidMovieException e) {
 							System.out.println("Creating movie cashing failed in MovieDAO");
 						}

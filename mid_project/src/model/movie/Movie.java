@@ -10,7 +10,7 @@ import model.exceptions.InvalidMovieException;
 
 public class Movie {
 	
-	private static int id = 0;
+//	private static int id = 0; LOOK IN CONSTRUCTOR
 	private String name;
 	private String poster;
 	private HashSet<String> genre; //can have more then 1
@@ -20,7 +20,7 @@ public class Movie {
 	private HashSet<Director> directors;
 	private String description;
 	private Date date;
-	private int idx;
+	private long id;
 	
 	public Movie(String name, String poster, ArrayList<String> genres, HashSet<Actor> actors,
 			HashSet<Director> directors, String description, Date date) throws InvalidMovieException {
@@ -38,10 +38,18 @@ public class Movie {
 		this.directors = directors;
 		this.description = description;
 		this.date = date;
-		this.idx = Movie.id++;
+		//this.idx = Movie.id++;  we want the generated from mySQL id
 		// TODO for actors and directors to push movies 
 	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
 
+	public long getId() {
+		return id;
+	}
+	
 	public String getName() {
 		return name;
 	}

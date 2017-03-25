@@ -65,8 +65,8 @@ public class UserDAO{
 		allUsers.put(toAdd.getName(), toAdd);
 	}
 	
-	public synchronized HashMap<String, User> getAllUsers(){
-		return allUsers;
+	public synchronized Map<String, User> getAllUsers(){
+		return Collections.unmodifiableMap(allUsers);
 	}
 	
 	public synchronized boolean validLogin(String username, String passord) throws InvalidUserException{
@@ -76,8 +76,8 @@ public class UserDAO{
 		return false;
 	}
 	
-	public synchronized HashMap<String, User> getLoggedUsers(){
-		return loggedUsers;
+	public synchronized Map<String, User> getLoggedUsers(){
+		return Collections.unmodifiableMap(loggedUsers);
 	}
 	
 }

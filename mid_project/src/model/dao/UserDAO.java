@@ -14,7 +14,6 @@ import model.user.User.role;
 
 public class UserDAO{
 	private static UserDAO instance = null;
-	private static HashMap<String, User> loggedUsers = new HashMap<>();
 	private static final HashMap<String, User> allUsers = new HashMap<>();
 	private UserDAO(){
 	}
@@ -65,19 +64,14 @@ public class UserDAO{
 		allUsers.put(toAdd.getName(), toAdd);
 	}
 	
-	public synchronized Map<String, User> getAllUsers(){
+	public Map<String, User> getAllUsers(){
 		return Collections.unmodifiableMap(allUsers);
 	}
 	
-	public synchronized boolean validLogin(String username, String passord) throws InvalidUserException{
+	public boolean validLogin(String username, String passord) throws InvalidUserException{
 		if(getInstance().getAllUsers().containsKey(username)){
 			return getAllUsers().get(username).getPassword().equals(passord);
 		}
 		return false;
 	}
-	
-	public synchronized Map<String, User> getLoggedUsers(){
-		return Collections.unmodifiableMap(loggedUsers);
-	}
-	
 }

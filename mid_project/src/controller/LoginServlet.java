@@ -4,6 +4,7 @@ package controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -49,9 +50,9 @@ public class LoginServlet extends HttpServlet {
 		try{
 			if(UserDAO.getInstance().validLogin(user, password)){
 				HttpSession session = request.getSession(true);
-				session.setAttribute("IMDb_user", user);
 				session.setMaxInactiveInterval(30); // set session time 30 seconds
-				UserDAO.getInstance().getLoggedUsers().put(session.getId(), UserDAO.getInstance().getAllUsers().get(user));
+				User toAdd = UserDAO.getInstance().getAllUsers().get(user);
+				session.setAttribute("user", toAdd);
 				try {
 					response.sendRedirect("userLogged.jsp");
 				} catch (IOException e) {

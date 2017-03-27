@@ -1,5 +1,6 @@
 <%@page import="model.dao.UserDAO"%>
 <%@page import="model.dao.IMDbConnect"%>
+<%@page import="model.user.User" %>
 <%@ page language="java" contentType="text/html; charset=windows-1256"
 	pageEncoding="windows-1256" import="java.io.IOException"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -42,8 +43,8 @@
  		}
  	%>
  	<% 
-	 	String status = UserDAO.getInstance().getLoggedUsers().get(session.getId()).getStatus();
-	 	System.out.println(status);
+	 	User user = (User)session.getAttribute("user");
+ 		String status = user.getStatus();
  	%> <!-- use this status for privileges -->
 	
 	<div class="container">
@@ -71,7 +72,7 @@
 			    	<ul class="nav navbar-nav pull-right">
 				      <li class="dropdown">
 			           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
-			             <% String currentUser = (String) (session.getAttribute("IMDb_user"));%> <%= currentUser %> 
+			             <%= user.getName() %> 
 			             <span class="caret"></span>
 			           </a>
 			           <ul class="dropdown-menu" role="menu">

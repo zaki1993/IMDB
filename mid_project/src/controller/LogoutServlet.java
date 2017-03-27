@@ -39,7 +39,7 @@ public class LogoutServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession(true);
-		UserDAO.getInstance().getLoggedUsers().remove(session.getId());
+		request.getSession(true).removeAttribute("user");
 		try {
 			response.sendRedirect("index.html");
 		} catch (IOException e) {

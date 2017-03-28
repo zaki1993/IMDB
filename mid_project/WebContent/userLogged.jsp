@@ -1,6 +1,9 @@
+<%@page import="java.io.PrintWriter"%>
 <%@page import="model.dao.UserDAO"%>
 <%@page import="model.dao.IMDbConnect"%>
 <%@page import="model.user.User" %>
+<%@page import="model.movie.Movie" %>
+<%@page import="model.dao.MovieDAO" %>
 <%@ page language="java" contentType="text/html; charset=windows-1256"
 	pageEncoding="windows-1256" import="java.io.IOException"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -30,6 +33,21 @@
 		.mainbody{
 			background-color: white;
 			height: 100vh;
+		}
+		
+		#top-rated{
+			padding: 20px;
+			text-align: center;
+			display: inline-block;
+		}
+		
+		h1 {
+		    font-weight: bold;
+		    font-size: 32px;
+		}
+		
+		#movie-post{
+			display: none;
 		}
 	</style>
 <title>IMDB</title>
@@ -117,7 +135,7 @@
 			           </ul>	
 			          </li>
 			          </ul>
-		        	<div>
+		        	<div id="movie-post">
 			        	<% if(status.equals("ADMIN")){ %>
 			        		//<!-- Add new movie field -->
 						  	<div id="dialog-form" title="Add new movie!">
@@ -144,8 +162,28 @@
 		        			}
 						%>
 		  			</div>
-				</nav>
-			</nav>
+				</div>
+			  	</nav>
+			  </nav>
+			  <div id="container">
+					<%
+						Movie mostRated = MovieDAO.getInstance().getTopRatedMovie();
+						String poster = mostRated.getPoster();
+					%>
+					<div id="top-rated">
+						<h1 style=""> TOP RATED </h1>
+						<a href="#"><img src="<%= poster %>"></a>
+						<select>
+							<%for(int i = 1; i <= 10; i++){
+								out.println("<option>" + i + "</option>");
+							}
+							%>
+						</select>
+					</div>
+					<div id="most-commented">
+					
+					</div>
+			  </div>
 		   </div>
 	    </div>
 	  </div>

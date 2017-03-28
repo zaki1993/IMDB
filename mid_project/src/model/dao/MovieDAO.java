@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import model.exceptions.InvalidMovieException;
 import model.movie.Actor;
@@ -28,6 +29,7 @@ public class MovieDAO {
 		if(instance == null){
 			instance = new MovieDAO();
 			if(allMovies.isEmpty()){
+				System.out.println("asdadasdasdsa");
 				String query = "SELECT id, poster, rating, description, date, name FROM imdb_movie;";
 				try {
 					PreparedStatement stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
@@ -38,38 +40,52 @@ public class MovieDAO {
 						String name = rs.getString("name");
 						String poster = rs.getString("poster");
 						String descr = rs.getString("description");
-						Date date = rs.getDate("date");
+						String date = rs.getString("date");
+						double rating = rs.getDouble("rating");
 						ArrayList<String> genresList = new ArrayList<>();
 						HashSet<Actor> actors = new HashSet<>();
 						HashSet<Director> scenaristi = new HashSet<>();
+						ResultSet rs1 = null;
 						query = "SELECT genre_name FROM imdb.imdb_genre_movie WHERE movie_id = ?;";
-						stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
-						stmt.setLong(1, id);
-						ResultSet rs1 = stmt.executeQuery();
-						while(rs1.next()){
-							String genre = rs1.getString("genre_name");
-							genresList.add(genre);
+						try{
+							stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
+							stmt.setLong(1, id);
+							rs1 = stmt.executeQuery();
+							while(rs1.next()){
+								String genre = rs1.getString("genre_name");
+								genresList.add(genre);
+							}
+						} catch(SQLException e1){
+							System.out.println("MovieDAO->Genre: " + e1.getMessage());
 						}
 						query = "SELECT name FROM imdb.imdb_actor WHERE id in (SELECT actor_id FROM imdb.imdb_actor_movie WHERE movie_id = ?)";
-						stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
-						stmt.setLong(1, id);
-						ResultSet rs2 = stmt.executeQuery();
-						while(rs2.next()){
-							String actorName = rs1.getString("name");
-							Actor actor = new Actor(actorName);
-							actors.add(actor);
+						try{
+							stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
+							stmt.setLong(1, id);
+							ResultSet rs2 = stmt.executeQuery();
+							while(rs2.next()){
+								String actorName = rs2.getString("name");
+								Actor actor = new Actor(actorName);
+								actors.add(actor);
+							}
+						} catch(SQLException e1){
+							System.out.println("MovieDAO->Actor: " + e1.getMessage());
 						}
 						query = "SELECT name FROM imdb.imdb_director WHERE id in (SELECT director_id FROM imdb.imdb_director_movie WHERE movie_id = ?)";
-						stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
-						stmt.setLong(1, id);
-						ResultSet rs3 = stmt.executeQuery();
-						while(rs3.next()){
-							String directorName = rs1.getString("name");
-							Director director = new Director(directorName);
-							scenaristi.add(director);
+						try{
+							stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
+							stmt.setLong(1, id);
+							ResultSet rs3 = stmt.executeQuery();
+							while(rs3.next()){
+								String directorName = rs3.getString("name");
+								Director director = new Director(directorName);
+								scenaristi.add(director);
+							}
+						} catch(SQLException e1){
+							System.out.println("MovieDAO->Genre: " + e1.getMessage());
 						}
 						try {
-							newMovie = new Movie(name, poster, genresList, actors, scenaristi, descr, date);
+							newMovie = new Movie(name, poster, genresList, actors, scenaristi, descr, date, rating);
 							newMovie.setId(id);
 						} catch (InvalidMovieException e) {
 							System.out.println("Creating movie cashing failed in MovieDAO");
@@ -84,7 +100,7 @@ public class MovieDAO {
 		return instance;
 	}
 
-	private synchronized static String customGsonParser(String json, String name){
+	private static String customGsonParser(String json, String name){
 		String temp = json.substring(json.indexOf(name) + name.length() + 3);
 		return temp.substring(0, temp.indexOf("\""));
 	}
@@ -236,7 +252,7 @@ public class MovieDAO {
 				}
 				HashSet<Director> directorsHash = new HashSet<>();
 				directorsHash.add(new Director(director));
-				allMovies.put(movie, new Movie(movie, poster, genresArray, actorsHash, directorsHash, description, new java.util.Date(date)));
+				allMovies.put(movie, new Movie(movie, poster, genresArray, actorsHash, directorsHash, description, date, Double.parseDouble(rating)));
 			}
 		} catch (IOException e) {
 			System.out.println("In movie!");
@@ -246,8 +262,21 @@ public class MovieDAO {
 		}
 	}
 	
-	public synchronized Map<String, Movie> allMovies() {
+	public Map<String, Movie> allMovies() {
 		return Collections.unmodifiableMap(allMovies);
+	}
+	
+	public Movie getTopRatedMovie(){
+		Movie topRated = null;
+		double currentRating = 0.0;
+		for(Entry<String, Movie> i : allMovies.entrySet()){
+			double temp = i.getValue().getRating();
+			if(temp >= currentRating){
+				currentRating = temp;
+				topRated = i.getValue();
+			}
+		}
+		return topRated;
 	}
 	
 	

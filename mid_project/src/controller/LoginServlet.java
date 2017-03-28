@@ -69,7 +69,7 @@ public class LoginServlet extends HttpServlet {
 		} catch(InvalidUserException | UserNotFoundException ex){
 			// redirect to home page
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
-            PrintWriter out;
+            PrintWriter out = null;
 			try {
 				out = response.getWriter();
 	            out.println("<script> alert(\"Please make sure you enter a valid username or password.\") </script>");

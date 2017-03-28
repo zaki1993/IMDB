@@ -19,7 +19,7 @@ public class IMDbConnect {
 			Class.forName("com.mysql.jdbc.Driver");
 			
 			if(System.getProperty("os.name").startsWith("Linux")){
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/IMDb?autoReconnect=true&useSSL=false", "streetzaki", "14eiuqhwdyeuQ*");
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/imdb?autoReconnect=true&useSSL=false", "streetzaki", "14eiuqhwdyeuQ*");
 			}
 			else{
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/IMDb?autoReconnect=true&useSSL=false", "root", "injikipliok");

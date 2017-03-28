@@ -21,7 +21,7 @@ public class UserDAO{
 		if(instance == null){
 			instance = new UserDAO();
 			if(allUsers.isEmpty()){
-				String query = "SELECT name, password, age, location FROM IMDb_user";
+				String query = "SELECT name, password, age, location FROM imdb_user";
 				try {
 					PreparedStatement stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
 					ResultSet rs = stmt.executeQuery();
@@ -50,7 +50,7 @@ public class UserDAO{
 		// add to db
 		System.out.println(getAllUsers().toString());
 		try {
-			String query = "INSERT INTO `IMDb_user`(`name`, `password`, `age`, `location`, `Status_id`) VALUES (?, ?, ?, ?, ?)";
+			String query = "INSERT INTO `imdb_user`(`name`, `password`, `age`, `location`, `Status_id`) VALUES (?, ?, ?, ?, ?)";
 			PreparedStatement stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
 			stmt.setString(1, toAdd.getName());
 			stmt.setString(2, toAdd.getPassword());

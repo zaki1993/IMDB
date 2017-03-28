@@ -43,7 +43,8 @@ public class AddMovieServlet extends HttpServlet {
 		}
 		else{
 			if((Boolean) session.getAttribute("logged")){
-				if(((String) session.getAttribute("role")).equals(User.role.ADMIN.toString())){
+				User user = (User) session.getAttribute("user");
+				if(user.getStatus().equals(User.role.ADMIN.toString())){
 					MovieDAO.getInstance().addMovie(request.getParameter("movie-name"));
 					response.sendRedirect("userLogged.jsp");
 				}

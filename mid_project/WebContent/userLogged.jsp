@@ -44,8 +44,8 @@
  		}
  	%>
  	<% 
-	 	String username = (String) session.getAttribute("username");
- 		String status = (String) session.getAttribute("role");
+	 	User user = (User) session.getAttribute("user");
+ 		String status = user.getStatus();
  	%> <!-- use this status for privileges -->
 	
 	<div class="container">
@@ -73,7 +73,7 @@
 			    	<ul class="nav navbar-nav pull-right">
 				      <li class="dropdown">
 			           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
-			             <%= username %> 
+			             <%= user.getName() %> 
 			             <span class="caret"></span>
 			           </a>
 			           <ul class="dropdown-menu" role="menu">

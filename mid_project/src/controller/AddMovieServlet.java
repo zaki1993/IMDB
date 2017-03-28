@@ -29,7 +29,6 @@ public class AddMovieServlet extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	// TODO Auto-generated method stub
     	doPost(req, resp);
     }
 	/**
@@ -37,8 +36,7 @@ public class AddMovieServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(true);
-		if(session == null || session.getAttribute("logged") == null){
-			session.invalidate();
+		if(session == null || session.isNew() || session.getAttribute("logged") == null){
 			response.sendRedirect("index.html");
 		}
 		else{

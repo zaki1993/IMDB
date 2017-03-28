@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
 		try{
 			if(UserDAO.getInstance().validLogin(user, password)){
 				HttpSession session = request.getSession(true);
-				session.setMaxInactiveInterval(30); // set session time 30 seconds
+				session.setMaxInactiveInterval(60*2); // set session time 30 seconds
 				User toAdd = UserDAO.getInstance().getAllUsers().get(user);
 				session.setAttribute("user", toAdd);
 				session.setAttribute("logged", true);

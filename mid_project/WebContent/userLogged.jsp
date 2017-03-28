@@ -1,9 +1,10 @@
 <%@page import="java.io.PrintWriter"%>
 <%@page import="model.dao.UserDAO"%>
 <%@page import="model.dao.IMDbConnect"%>
-<%@page import="model.user.User" %>
-<%@page import="model.movie.Movie" %>
-<%@page import="model.dao.MovieDAO" %>
+<%@page import="model.user.User"%>
+<%@page import="model.movie.Movie"%>
+<%@page import="model.dao.MovieDAO"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=windows-1256"
 	pageEncoding="windows-1256" import="java.io.IOException"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -32,11 +33,11 @@
 		
 		.mainbody{
 			background-color: white;
-			height: 100vh;
+			height: auto;
 		}
 		
 		#top-rated{
-			padding: 20px;
+			padding: 40px;
 			text-align: center;
 			display: inline-block;
 		}
@@ -49,6 +50,29 @@
 		#movie-post{
 			display: none;
 		}
+		
+		#top-ten-rated{
+			background-color: gray;
+		}
+		
+		#top-ten-rated table td{
+			width: 150px;
+			heigth: 150px;
+			overflow: hidden;
+		}
+		
+		#top-ten-rated table img {
+			background-position: center center;
+   			background-size: cover;
+			max-width: 150px;
+			width: auto;
+			height: auto;
+			margin: auto;
+			margin-left: 40px;
+			margin-bottom: 20px;
+			margin-top: 20px;
+		}
+		
 	</style>
 <title>IMDB</title>
 </head>
@@ -170,18 +194,41 @@
 						Movie mostRated = MovieDAO.getInstance().getTopRatedMovie();
 						String poster = mostRated.getPoster();
 					%>
-					<div id="top-rated">
-						<h1 style=""> TOP RATED </h1>
-						<a href="#"><img src="<%= poster %>"></a>
-						<select>
-							<%for(int i = 1; i <= 10; i++){
-								out.println("<option>" + i + "</option>");
-							}
-							%>
-						</select>
+					<div id="tops">
+						<div id="top-rated">
+							<h1 style=""> TOP RATED </h1>
+							<a href="#"><img src="<%= poster %>"></a>
+							<select>
+								<%for(int i = 1; i <= 10; i++){
+									out.println("<option>" + i + "</option>");
+								}
+								%>
+							</select>
+						</div>
+						<div id="most-commented">
+						
+						</div>
 					</div>
-					<div id="most-commented">
-					
+					<div id="top-ten-rated">
+						<!-- random generated 10 movie posters -->
+						<%
+							List<Movie> topTenRated = MovieDAO.getInstance().topTenRated();
+							int n = 0;
+							out.println("<table>");
+							out.println("<tr>");
+							for(Movie i : topTenRated){
+								if(n % 5 == 0 && n != 0){
+									out.println("</tr>");
+									out.println("<tr>");
+								}
+								out.println("<td>");
+								out.println("<img src=\""+ i.getPoster() + "\">");
+								out.println("</td>");
+								n++;
+							}
+							out.println("</tr>");
+							out.println("</table>");
+						%>
 					</div>
 			  </div>
 		   </div>

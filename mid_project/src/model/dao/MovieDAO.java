@@ -1,17 +1,20 @@
 package model.dao;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeSet;
 
 import model.exceptions.InvalidMovieException;
 import model.movie.Actor;
@@ -140,7 +143,7 @@ public class MovieDAO {
 					rating = "0";
 				}
 				try{
-					String query = "INSERT IGNORE INTO `IMDb_movie`(`poster`, `rating`, `description`, `date`, `name`) VALUES (?, ?, ?, ?, ?)";
+					String query = "INSERT IGNORE INTO `imdb_movie`(`poster`, `rating`, `description`, `date`, `name`) VALUES (?, ?, ?, ?, ?)";
 					stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 					stmt.setString(1, poster);
 					stmt.setDouble(2, Double.parseDouble(rating));
@@ -163,7 +166,7 @@ public class MovieDAO {
 				String director = customGsonParser(movieJson, "Director");
 					try {
 						long directorId = 0;
-						String query = "INSERT IGNORE INTO `IMDb_director`(`name`) VALUES (?)";
+						String query = "INSERT IGNORE INTO `imdb_director`(`name`) VALUES (?)";
 						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 						stmt.setString(1, director);
 						stmt.executeUpdate();
@@ -173,7 +176,7 @@ public class MovieDAO {
 						}
 						
 						// now fill the director_movie table
-						query = "INSERT IGNORE INTO `IMDb_director_movie` (`director_id`, `movie_id`) VALUES (?, ?)";
+						query = "INSERT IGNORE INTO `imdb_director_movie` (`director_id`, `movie_id`) VALUES (?, ?)";
 						stmt = imdb.getInstance().getConnection().prepareStatement(query);
 						stmt.setLong(1, directorId);
 						stmt.setLong(2, movieId);
@@ -191,7 +194,7 @@ public class MovieDAO {
 				for(int i = 0; i < actors.length; i++){
 					try{
 						long actorId = 0;
-						String query = "INSERT IGNORE INTO `IMDb_actor`(`name`) VALUES (?)";
+						String query = "INSERT IGNORE INTO `imdb_actor`(`name`) VALUES (?)";
 						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 						stmt.setString(1, actors[i]);
 						stmt.executeUpdate();
@@ -201,7 +204,7 @@ public class MovieDAO {
 						}
 						
 						// fill actor_movie table
-						query = "INSERT IGNORE INTO `IMDb_actor_movie` (`actor_id`, `movie_id`) VALUES (?, ?)";
+						query = "INSERT IGNORE INTO `imdb_actor_movie` (`actor_id`, `movie_id`) VALUES (?, ?)";
 						stmt = imdb.getInstance().getConnection().prepareStatement(query);
 						stmt.setLong(1, actorId);
 						stmt.setLong(2, movieId);
@@ -220,7 +223,7 @@ public class MovieDAO {
 				for(int i = 0; i < genres.length; i++){
 					try{
 						String genreName = null;
-						String query = "INSERT IGNORE INTO `IMDb_genre`(`name`) VALUES (?)";
+						String query = "INSERT IGNORE INTO `imdb_genre`(`name`) VALUES (?)";
 						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 						stmt.setString(1, genres[i]);
 						stmt.executeUpdate();
@@ -230,7 +233,7 @@ public class MovieDAO {
 						}
 						
 						// fill genre_movie table
-						query = "INSERT IGNORE INTO `IMDb_genre_movie` (`genre_name`, `movie_id`) VALUES (?, ?)";
+						query = "INSERT IGNORE INTO `imdb_genre_movie` (`genre_name`, `movie_id`) VALUES (?, ?)";
 						stmt = imdb.getInstance().getConnection().prepareStatement(query);
 						stmt.setString(1, genreName);
 						stmt.setLong(2, movieId);
@@ -279,6 +282,33 @@ public class MovieDAO {
 		return topRated;
 	}
 	
+	private void selectionSort(List<Movie> movies){
+		int sortMovieCount = 16;
+		if(movies.size() <= sortMovieCount){
+			sortMovieCount = movies.size() - 1;
+		}
+		int n = 0;
+		while(n <= sortMovieCount){
+			int start = n;
+			for(int i = n; i < movies.size(); i++){
+				if(movies.get(i).getRating() >= movies.get(start).getRating()){
+					start = i;
+				}
+			}
+			Movie temp = movies.get(n);
+			movies.set(n, movies.get(start));
+			movies.set(start, temp);
+			n++;
+		}
+	}
+	
+	public List<Movie> topTenRated(){
+		List<Movie> toSort = new ArrayList<>(allMovies.values());
+		selectionSort(toSort);
+		// remove the most rated movie because we already show this movie at the most rated movie field
+		toSort.remove(0);
+		return toSort;
+	}
 	
 }
 

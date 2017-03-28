@@ -37,6 +37,15 @@
 		}
 		
 		#top-rated{
+			margin-left: 60px;
+			padding: 40px;
+			text-align: center;
+			display: inline-block;
+		}
+		
+		#most-commented{
+			margin-left: 100px;
+			margin-right: 60px;
 			padding: 40px;
 			text-align: center;
 			display: inline-block;
@@ -192,21 +201,18 @@
 			  <div id="container">
 					<%
 						Movie mostRated = MovieDAO.getInstance().getTopRatedMovie();
-						String poster = mostRated.getPoster();
+						Movie mostCommented = MovieDAO.getInstance().getMostCommentedMovie();
+						String mostRatedPoster = mostRated.getPoster();
+						String mostCommentedPoster = mostCommented.getPoster();
 					%>
 					<div id="tops">
 						<div id="top-rated">
 							<h1 style=""> TOP RATED </h1>
-							<a href="#"><img src="<%= poster %>"></a>
-							<select>
-								<%for(int i = 1; i <= 10; i++){
-									out.println("<option>" + i + "</option>");
-								}
-								%>
-							</select>
+							<a href="#"><img src="<%= mostRatedPoster %>"></a>
 						</div>
 						<div id="most-commented">
-						
+							<h1 style=""> MOST COMMENTED </h1>
+							<a href="#"><img src="<%= mostCommentedPoster %>"></a>
 						</div>
 					</div>
 					<div id="top-ten-rated">
@@ -222,7 +228,7 @@
 									out.println("<tr>");
 								}
 								out.println("<td>");
-								out.println("<img src=\""+ i.getPoster() + "\">");
+								out.println("<a href=\"#\"><img src=\""+ i.getPoster() + "\"></a>");
 								out.println("</td>");
 								n++;
 							}

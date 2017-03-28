@@ -7,14 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeSet;
 
 import model.exceptions.InvalidMovieException;
 import model.movie.Actor;
@@ -280,6 +277,33 @@ public class MovieDAO {
 			}
 		}
 		return topRated;
+	}
+	
+	public Movie getMostCommentedMovie(){
+		Movie mostCommented = null;
+		int comments = 0;
+		for(Entry<String, Movie> i : allMovies.entrySet()){
+			// nai tupata zaqvka ever
+			// joinva ot 5 tablici za da vzeme broq na komentari za daden film
+			String query = "select count(*) as broika from imdb_movie inner join imdb_movie_post on imdb_movie.id = Movie_id inner join imdb_post on imdb_movie_post.Post_id = imdb_post.id inner join imdb_comment_post on imdb_comment_post.post_id = imdb_post.id inner join imdb_comment on imdb_comment.id = comment_id where imdb_movie.id = ?";
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			try {
+				stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
+				stmt.setLong(1, i.getValue().getId());
+				rs = stmt.executeQuery();
+				rs.next();
+				int result = rs.getInt("broika");
+				if(result >= comments){
+					comments = result;
+					mostCommented = i.getValue();
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return mostCommented;
 	}
 	
 	private void selectionSort(List<Movie> movies){

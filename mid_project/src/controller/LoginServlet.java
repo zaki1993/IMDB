@@ -56,6 +56,11 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("logged", true);
 				session.setAttribute("username", toAdd.getName());
 				session.setAttribute("role", toAdd.getStatus());
+				response.setHeader("Pragma", "No-cache");
+				response.setDateHeader("Expires", 0);
+				response.setDateHeader("Expires", 0);
+				response.setHeader("Cache-Control", "no-cache");
+				response.setHeader("Cache-Control", "no-cache");
 				try {
 					response.sendRedirect("userLogged.jsp");
 				} catch (IOException e) {

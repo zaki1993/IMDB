@@ -35,16 +35,17 @@
 <title>IMDB</title>
 </head>
 <body>
- 	<% if(session == null || session.isNew()){
- 		// if the session is invalid then redirect
- 		// if someone tries to call this file without permission then also redirect (TODO)
+ 	<% if(session == null || session.isNew() || session.getAttribute("logged") == null || (Boolean) session.getAttribute("logged") == false){
+	 		// if the session is invalid then redirect
+	 		// if someone tries to call this file without permission then also redirect (TODO)
+ 			session.invalidate();
 	 		response.sendRedirect("index.html");
 	 		return;
  		}
  	%>
  	<% 
-	 	User user = (User)session.getAttribute("user");
- 		String status = user.getStatus();
+	 	String username = (String) session.getAttribute("username");
+ 		String status = (String) session.getAttribute("role");
  	%> <!-- use this status for privileges -->
 	
 	<div class="container">
@@ -72,7 +73,7 @@
 			    	<ul class="nav navbar-nav pull-right">
 				      <li class="dropdown">
 			           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
-			             <%= user.getName() %> 
+			             <%= username %> 
 			             <span class="caret"></span>
 			           </a>
 			           <ul class="dropdown-menu" role="menu">

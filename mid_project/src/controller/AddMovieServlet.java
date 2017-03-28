@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.dao.MovieDAO;
 import model.user.User;
@@ -35,9 +36,26 @@ public class AddMovieServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//todo validation and other stuff
-		MovieDAO.getInstance().addMovie(request.getParameter("movie-name"));
-		response.sendRedirect("userLogged.jsp");
+		HttpSession session = request.getSession(true);
+		if(session == null || session.getAttribute("logged") == null){
+			session.invalidate();
+			response.sendRedirect("index.html");
+		}
+		else{
+			if((Boolean) session.getAttribute("logged")){
+				if(((String) session.getAttribute("role")).equals(User.role.ADMIN.toString())){
+					MovieDAO.getInstance().addMovie(request.getParameter("movie-name"));
+					response.sendRedirect("userLogged.jsp");
+				}
+				else{
+					response.sendRedirect("userLogged.jsp");
+				}
+			}
+			else{
+				session.invalidate();
+				response.sendRedirect("index.html");
+			}
+		}
 	}
 
 }

@@ -39,7 +39,8 @@ public class LogoutServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession(true);
-		request.getSession(true).removeAttribute("user");
+		session.setAttribute("logged", false);
+		session.invalidate();
 		try {
 			response.sendRedirect("index.html");
 		} catch (IOException e) {

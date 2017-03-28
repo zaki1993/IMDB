@@ -53,6 +53,9 @@ public class LoginServlet extends HttpServlet {
 				session.setMaxInactiveInterval(30); // set session time 30 seconds
 				User toAdd = UserDAO.getInstance().getAllUsers().get(user);
 				session.setAttribute("user", toAdd);
+				session.setAttribute("logged", true);
+				session.setAttribute("username", toAdd.getName());
+				session.setAttribute("role", toAdd.getStatus());
 				try {
 					response.sendRedirect("userLogged.jsp");
 				} catch (IOException e) {

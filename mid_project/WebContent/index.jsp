@@ -143,122 +143,114 @@
 			      </form>
 			    </div>
 			    <% if(valid){ %>
-   			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			    	<ul class="nav navbar-nav pull-right">
-				      <li class="dropdown">
-			           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
-			             <%= user.getName() %> 
-			             <span class="caret"></span>
-			           </a>
-			           <ul class="dropdown-menu" role="menu">
-		            	 <% if(status != null && status.equals("ADMIN")) {
-		            			// put admin functionality here
-		            			try { %>
-		            				<li>
-		            				<a id="create-post">Create post</a>
-		            				</li>
-		            				<li>
-		            				<a id="add-movie">Add Movie</a>
-		            				</li>
-		            			<%	
-		            			} catch (IOException e) {
-		            				// in case of error redirect to logout -> home
-		            				response.sendRedirect("logout");
-		            		 		return;
-		            			}
-		            		} 
-		            	 %>
-		            	 <% if(status != null && status.equals("USER")) {
-		            			// put user functionality here
-		            			try { %>
-		            				<li>
-		            				<a>Rate Movie</a>
-		            				</li>
-		            				<li>
-		            				<a>Comment Post</a>
-		            				</li>
-		            				<% 
-		            			} catch (IOException e) {
-		            				// in case of error redirect to logout -> home
-		            				response.sendRedirect("logout");
-		            		 		return;
-		            			}
-		            		}
-		            	 %>
-			             <form action="logout" method="post">
-			            	 <input class="btn btn-primary btn-sm col-md-12" role="button" type="submit" value="Logout"></input>
-			             </form>
-			           </ul>	
-			          </li>
-			          </ul>
-			         </div>
-			          <% } else{ %>
-			          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			          		<ul class="nav navbar-nav pull-right">
-				      <li class="dropdown">
-				          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Login <span class="caret"></span></a>
-				          <ul class="dropdown-menu" role="menu">
-				            <form action="login" method="post">
-							  Username: 
-							  <input type="text" name="username" placeholder="Username">
-							  <br>
-							  Password: 
-							  <input type="password" name="password" placeholder="Password">
-							  <br><br>
-							  <input class="btn btn-primary btn-sm col-md-12" type="submit" value="Login">
-							</form>
-				          </ul>	
-			          </li>
-			        <li>
-			        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Register <span class="caret"></span></a>
-				          <ul class="dropdown-menu" role="menu">
-				            <form action="register" method="post">
-							  Username: 
-							  <input type="text" name="username" placeholder="Username">
-							  <br>
-							  Password: 
-							  <input type="password" name="password" placeholder="Password">
-							  <br>
-							  Age: 
-							  <input type="number" name="age" placeholder="Age">
-							  <br>
-							  Location: 
-							  <input type="text" name="location" placeholder="Location">
-							  <br><br>
-							  <input class="btn btn-primary btn-sm col-md-12" type="submit" value="Register">
-							</form>
-				          </ul>	
-		            </li>
-			      </ul>
-			      </div>
-			          <% } %>
-		        	<div id="movie-post">
-			        	<% if(status != null && status.equals("ADMIN")){ %>
-			        		//<!-- Add new movie field -->
-						  	<div id="dialog-form" class="popup" title="Add new movie!">
-						  	<form action="addmovie" type="post">
-						  	Movie name
-				  			<input type="text" name="movie-name" placeholder="Movie name" class="text ui-widget-content ui-corner-all">
-				  			<input class="btn btn-primary btn-sm col-md-5" type="submit" value="Add movie"></input>
-				  			</form>
-				  			</div>
-			  			<%
-		        			}
-						%>
-						
-						<% if(status != null && status.equals("ADMIN")){ %>
-			        		//<!-- Create new post field -->
-						  	<div id="dialog-form1" class="popup" title="Create new post!">
-						  	<form action="createpost" type="post">
-						  	Movie name
-				  			<input type="text" name="movie-name" placeholder="Movie name" class="text ui-widget-content ui-corner-all">
-				  			<input class="btn btn-primary btn-sm col-md-5" type="submit" value="Create post"></input>
-				  			</form>
-				  			</div>
-			  			<%
-		        			}
-						%>
-		  			</div>
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav pull-right">
+							<li class="dropdown">
+							    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
+							    <%= user.getName() %> 
+								<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu" role="menu">
+									 <% if(status != null && status.equals("ADMIN")) {
+											// put admin functionality here
+											try { %>
+											<li><a id="create-post">Create post</a></li>
+											<li><a id="add-movie">Add Movie</a></li>
+											<%	
+												} catch (IOException e) {
+													// in case of error redirect to logout -> home
+													response.sendRedirect("logout");
+											 		return;
+												}
+											} 
+										%>
+								<% if(status != null && status.equals("USER")) {
+									// put user functionality here
+										try { %>
+											<li><a>Rate Movie</a></li>
+											<li><a>Comment Post</a></li>
+										<% 
+											} catch (IOException e) {
+												// in case of error redirect to logout -> home
+												response.sendRedirect("logout");
+										 		return;
+											}
+									}
+								%>
+									<form action="logout" method="post">
+										<input class="btn btn-primary btn-sm col-md-12" role="button" type="submit" value="Logout"></input>
+									</form>
+								</ul>	
+							</li>
+						</ul>
+					</div>
+				<% } else{ %>
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav pull-right">
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Login <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<form action="login" method="post">
+						  				Username: 
+						  				<input type="text" name="username" placeholder="Username">
+					 					<br>
+					  					Password: 
+					  					<input type="password" name="password" placeholder="Password">
+										<br><br>
+										<input class="btn btn-primary btn-sm col-md-12" type="submit" value="Login">
+									</form>
+				       			</ul>	
+				      		</li>
+				    		<li>
+				    			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Register <span class="caret"></span></a>
+				       			<ul class="dropdown-menu" role="menu">
+				        			<form action="register" method="post">
+				  						Username: 
+										<input type="text" name="username" placeholder="Username">
+										<br>
+										Password: 
+										<input type="password" name="password" placeholder="Password">
+										<br>
+										Age: 
+										<input type="number" name="age" placeholder="Age">
+										<br>
+										Location: 
+										<input type="text" name="location" placeholder="Location">
+										<br><br>
+										<input class="btn btn-primary btn-sm col-md-12" type="submit" value="Register">
+									</form>
+				       			</ul>	
+				      		</li>
+				  		</ul>
+				   </div>
+			    <% } %>
+				<div id="movie-post">
+				<% if(status != null && status.equals("ADMIN")){ %>
+					//<!-- Add new movie field -->
+					<div id="dialog-form" class="popup" title="Add new movie!">
+						<form action="addmovie" type="post">
+							Movie name
+							<input type="text" name="movie-name" placeholder="Movie name" class="text ui-widget-content ui-corner-all">
+							<input class="btn btn-primary btn-sm col-md-5" type="submit" value="Add movie"></input>
+						</form>
+					</div>
+				<%
+				}
+				%>
+				
+				<% if(status != null && status.equals("ADMIN")){ %>
+					//<!-- Create new post field -->
+					<div id="dialog-form1" class="popup" title="Create new post!">
+						<form action="createpost" type="post">
+							Movie name
+							<input type="text" name="movie-name" placeholder="Movie name" class="text ui-widget-content ui-corner-all">
+							<input class="btn btn-primary btn-sm col-md-5" type="submit" value="Create post"></input>
+						</form>
+					</div>
+				<%
+				}
+				%>
+		  		</div>
 				</div>
 			  	</nav>
 			  </nav>

@@ -36,19 +36,12 @@
 			height: auto;
 		}
 		
-		#top-rated{
-			margin-left: 60px;
-			padding: 40px;
-			text-align: center;
-			display: inline-block;
+		#top-rated, #most-commented{
+			text-align: center;		
 		}
 		
-		#most-commented{
-			margin-left: 100px;
-			margin-right: 60px;
-			padding: 40px;
-			text-align: center;
-			display: inline-block;
+		#tops{
+			margin-bottom: 20px;
 		}
 		
 		h1 {
@@ -96,6 +89,11 @@
  	%>
  	<% 
 	 	User user = (User) session.getAttribute("user");
+ 		if(user == null){
+ 			session.invalidate();
+ 			response.sendRedirect("index.html");
+ 			return;
+ 		}
  		String status = user.getStatus();
  	%> <!-- use this status for privileges -->
 	
@@ -205,12 +203,12 @@
 						String mostRatedPoster = mostRated.getPoster();
 						String mostCommentedPoster = mostCommented.getPoster();
 					%>
-					<div id="tops">
-						<div id="top-rated">
+					<div id="tops" class="container">
+						<div id="top-rated" class="col-md-5">
 							<h1 style=""> TOP RATED </h1>
 							<a href="#"><img src="<%= mostRatedPoster %>"></a>
 						</div>
-						<div id="most-commented">
+						<div id="most-commented" class="col-md-5">
 							<h1 style=""> MOST COMMENTED </h1>
 							<a href="#"><img src="<%= mostCommentedPoster %>"></a>
 						</div>

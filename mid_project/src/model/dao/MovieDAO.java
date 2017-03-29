@@ -285,7 +285,7 @@ public class MovieDAO {
 		for(Entry<String, Movie> i : allMovies.entrySet()){
 			// nai tupata zaqvka ever
 			// joinva ot 5 tablici za da vzeme broq na komentari za daden film
-			String query = "select count(*) as broika from imdb_movie inner join imdb_movie_post on imdb_movie.id = Movie_id inner join imdb_post on imdb_movie_post.Post_id = imdb_post.id inner join imdb_comment_post on imdb_comment_post.post_id = imdb_post.id inner join imdb_comment on imdb_comment.id = comment_id where imdb_movie.id = ?";
+			String query = "SELECT count(*) as broika FROM imdb_movie INNER JOIN imdb_movie_post ON imdb_movie.id = Movie_id INNER JOIN imdb_post ON imdb_movie_post.Post_id = imdb_post.id INNER JOIN imdb_comment_post ON imdb_comment_post.post_id = imdb_post.id INNER JOIN imdb_comment ON imdb_comment.id = comment_id WHERE imdb_movie.id = ?";
 			PreparedStatement stmt = null;
 			ResultSet rs = null;
 			try {

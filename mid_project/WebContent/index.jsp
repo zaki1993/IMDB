@@ -11,11 +11,25 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" type="text/css" href="styles/style.css">
 	<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="styles/style.css">
 		
 	  <style>
-	    label, input {
+	  	body{
+			background-color: lightgray;
+		}
+		
+		.maincontainer{
+			width: 1000px;
+			margin: auto;
+		}
+		
+		.mainbody{
+			background-color: white;
+			height: 100vh;
+		}
+		
+	    #dialog-form1: label, input, #dialog-form2: label, input {
 	    	display: block;
 	    }
 	    
@@ -35,28 +49,16 @@
 	    	font-size: 1.2em; 
 	    	margin: .6em 0; 
 	    }
+	    
 	    .ui-dialog .ui-state-error { 
 	    	padding: .3em; 
 	    }
+	    
 	    .validateTips { 
 	    	border: 1px solid transparent;
 	    	padding: 0.3em;
 	     }
-	    
-		body{
-			background-color: lightgray;
-		}
-		
-		.maincontainer{
-			width: 1000px;
-			margin: auto;
-		}
-		
-		.mainbody{
-			background-color: white;
-			height: auto;
-		}
-		
+	    		
 		#top-rated, #most-commented{
 			text-align: center;		
 		}
@@ -100,22 +102,23 @@
 <title>IMDB</title>
 </head>
 <body>
- 	<% if(session == null || session.isNew() || session.getAttribute("logged") == null || (Boolean) session.getAttribute("logged") == false){
+ 	<% 
+ 		boolean valid = true;
+ 		String status = null;
+ 		if(session == null || session.isNew() || session.getAttribute("logged") == null || (Boolean) session.getAttribute("logged") == false){
 	 		// if the session is invalid then redirect
 	 		// if someone tries to call this file without permission then also redirect (TODO)
- 			session.invalidate();
-	 		response.sendRedirect("index.html");
-	 		return;
+ 			valid = false;
  		}
  	%>
  	<% 
 	 	User user = (User) session.getAttribute("user");
  		if(user == null){
- 			session.invalidate();
- 			response.sendRedirect("index.html");
- 			return;
+	 		valid = false;
  		}
- 		String status = user.getStatus();
+ 		else{
+ 			status = user.getStatus();
+ 		}
  	%> <!-- use this status for privileges -->
 	
 	<div class="container">
@@ -139,6 +142,7 @@
 			        <button type="submit" class="btn btn-default">Search</button>
 			      </form>
 			    </div>
+			    <% if(valid){ %>
    			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			    	<ul class="nav navbar-nav pull-right">
 				      <li class="dropdown">
@@ -147,7 +151,7 @@
 			             <span class="caret"></span>
 			           </a>
 			           <ul class="dropdown-menu" role="menu">
-		            	 <% if(status.equals("ADMIN")) {
+		            	 <% if(status != null && status.equals("ADMIN")) {
 		            			// put admin functionality here
 		            			try { %>
 		            				<li>
@@ -164,7 +168,7 @@
 		            			}
 		            		} 
 		            	 %>
-		            	 <% if(status.equals("USER")) {
+		            	 <% if(status != null && status.equals("USER")) {
 		            			// put user functionality here
 		            			try { %>
 		            				<li>
@@ -187,10 +191,51 @@
 			           </ul>	
 			          </li>
 			          </ul>
+			         </div>
+			          <% } else{ %>
+			          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			          		<ul class="nav navbar-nav pull-right">
+				      <li class="dropdown">
+				          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Login <span class="caret"></span></a>
+				          <ul class="dropdown-menu" role="menu">
+				            <form action="login" method="post">
+							  Username: 
+							  <input type="text" name="username" placeholder="Username">
+							  <br>
+							  Password: 
+							  <input type="password" name="password" placeholder="Password">
+							  <br><br>
+							  <input class="btn btn-primary btn-sm col-md-12" type="submit" value="Login">
+							</form>
+				          </ul>	
+			          </li>
+			        <li>
+			        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Register <span class="caret"></span></a>
+				          <ul class="dropdown-menu" role="menu">
+				            <form action="register" method="post">
+							  Username: 
+							  <input type="text" name="username" placeholder="Username">
+							  <br>
+							  Password: 
+							  <input type="password" name="password" placeholder="Password">
+							  <br>
+							  Age: 
+							  <input type="number" name="age" placeholder="Age">
+							  <br>
+							  Location: 
+							  <input type="text" name="location" placeholder="Location">
+							  <br><br>
+							  <input class="btn btn-primary btn-sm col-md-12" type="submit" value="Register">
+							</form>
+				          </ul>	
+		            </li>
+			      </ul>
+			      </div>
+			          <% } %>
 		        	<div id="movie-post">
-			        	<% if(status.equals("ADMIN")){ %>
+			        	<% if(status != null && status.equals("ADMIN")){ %>
 			        		//<!-- Add new movie field -->
-						  	<div id="dialog-form" title="Add new movie!">
+						  	<div id="dialog-form" class="popup" title="Add new movie!">
 						  	<form action="addmovie" type="post">
 						  	Movie name
 				  			<input type="text" name="movie-name" placeholder="Movie name" class="text ui-widget-content ui-corner-all">
@@ -201,9 +246,9 @@
 		        			}
 						%>
 						
-						<% if(status.equals("ADMIN")){ %>
+						<% if(status != null && status.equals("ADMIN")){ %>
 			        		//<!-- Create new post field -->
-						  	<div id="dialog-form1" title="Create new post!">
+						  	<div id="dialog-form1" class="popup" title="Create new post!">
 						  	<form action="createpost" type="post">
 						  	Movie name
 				  			<input type="text" name="movie-name" placeholder="Movie name" class="text ui-widget-content ui-corner-all">

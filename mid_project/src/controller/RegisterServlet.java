@@ -50,9 +50,9 @@ public class RegisterServlet extends HttpServlet {
 			response.sendRedirect("registered.html");
 		} catch(InvalidUserException | IOException ex){
 			try {
-				response.sendRedirect("index.html");
+				response.sendRedirect("index.jsp");
 			} catch (IOException e) {
-				System.out.println("Register counld not redirect to index.html: " + e.getMessage());
+				System.out.println("Register counld not redirect to index.jsp: " + e.getMessage());
 			}
 		}
 	}

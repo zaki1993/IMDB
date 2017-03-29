@@ -38,7 +38,7 @@ public class CreatePostServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//User.createPost();
-		response.sendRedirect("userLogged.jsp");
+		response.sendRedirect("index.jsp");
 	}
 
 }

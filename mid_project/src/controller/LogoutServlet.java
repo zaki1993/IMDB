@@ -42,7 +42,7 @@ public class LogoutServlet extends HttpServlet {
 		session.setAttribute("logged", false);
 		session.invalidate();
 		try {
-			response.sendRedirect("index.html");
+			response.sendRedirect("index.jsp");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

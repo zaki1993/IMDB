@@ -58,9 +58,9 @@ public class LoginServlet extends HttpServlet {
 				response.setDateHeader("Expires", 0);
 				response.setHeader("Cache-Control", "no-cache");
 				try {
-					response.sendRedirect("userLogged.jsp");
+					response.sendRedirect("index.jsp");
 				} catch (IOException e) {
-					System.out.println("Could not redirect to userLogged.jsp: " + e.getMessage());
+					System.out.println("Could not redirect to index.jsp: " + e.getMessage());
 				}
 			}
 			else{
@@ -68,18 +68,11 @@ public class LoginServlet extends HttpServlet {
 			}
 		} catch(InvalidUserException | UserNotFoundException ex){
 			// redirect to home page
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
             PrintWriter out = null;
 			try {
 				out = response.getWriter();
 	            out.println("<script> alert(\"Please make sure you enter a valid username or password.\") </script>");
-	            out.println("<script> window.location = 'http://localhost:8080/mid_project/index.html' </script>");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            try {
-				rd.include(request, response);
+	            out.println("<script> window.location = 'http://localhost:8080/mid_project/index.jsp' </script>");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

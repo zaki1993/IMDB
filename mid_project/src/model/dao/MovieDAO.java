@@ -279,7 +279,7 @@ public class MovieDAO {
 		return topRated;
 	}
 	
-	public Movie getMostCommentedMovie(){
+	public synchronized Movie getMostCommentedMovie(){
 		Movie mostCommented = null;
 		int comments = 0;
 		for(Entry<String, Movie> i : allMovies.entrySet()){

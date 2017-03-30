@@ -41,7 +41,7 @@
 		      <span class="icon-bar"></span>
 		      <span class="icon-bar"></span>
 		    </button>
-		    <a class="navbar-brand" href="index.jsp"><% session.setAttribute("home", true); session.setAttribute("post", false); %>IMDB</a>
+		    <form id="my-form-redirect" action="redirect" method="post"><a href="#"onclick="document.getElementById('my-form-redirect').submit();" class="navbar-brand" href="index.jsp">IMDB</a></form>
 		    <form action="search" method="post" class="navbar-form navbar-left" role="search">
 		      <div class="form-group">
 		        <input class="form-control" name="movie-name" placeholder="Search" type="text">

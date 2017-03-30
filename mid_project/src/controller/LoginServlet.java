@@ -25,6 +25,14 @@ import model.user.User;
  */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		session.setMaxInactiveInterval(60*2); // set session time 30 seconds
+		session.setAttribute("home", true);
+		session.setAttribute("post", false);
+		resp.sendRedirect("index.jsp");
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

@@ -19,6 +19,11 @@
 			background-color: lightgray;
 		}
 		
+		#my-form-redirect{
+			display: inline;
+			padding: -5px;
+		}
+		
 		.maincontainer{
 			width: 1000px;
 			margin: auto;

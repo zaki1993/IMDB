@@ -23,6 +23,8 @@ public class LogoutServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession(true);
 		session.setAttribute("logged", false);
+		session.setAttribute("home", true);
+		session.setAttribute("post", false);
 		session.invalidate();
 		try {
 			response.sendRedirect("index.jsp");

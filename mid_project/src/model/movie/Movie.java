@@ -14,7 +14,7 @@ public class Movie {
 	private String name;
 	private String poster;
 	private HashSet<String> genre; //can have more then 1
-	private int voters;
+	private int voters = 1000;
 	private double rating;
 	private HashSet<Actor> actors;
 	private HashSet<Director> directors;

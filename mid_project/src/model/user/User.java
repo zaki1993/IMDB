@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 
 import model.dao.IMDbConnect;
@@ -24,6 +25,7 @@ public class User implements IUser{
 	private ArrayList<String> ratedList;
 	private role status;
 	private String password;
+	private long id;
 	
 	// we need this constructor, because only the ADMIN can create users with roles
 	// make the constructor protected so we can call it only from the classes that inherit this class
@@ -47,6 +49,14 @@ public class User implements IUser{
 	public static synchronized void createPost(Movie movie){
 		Post post = new Post(movie);
 		// TODO
+	}
+	
+	public long getId(){
+		return id;
+	}
+	
+	public void setId(long id){
+		this.id = id;
 	}
 	
 	public String getPassword(){
@@ -80,20 +90,6 @@ public class User implements IUser{
 	}
 	
 	@Override
-	public synchronized boolean comment(Post post, String msg) {
-		if (post == null) {
-			System.out.println("No such post!");
-			return false;
-		}
-		if(msg == null || msg.isEmpty()){
-			System.out.println("No valid comment!");
-			return false;
-		}
-		post.addComment(this, msg);
-		return true;
-	}
-	
-	@Override
 	public synchronized boolean addToWatchList(Movie toAdd) {
 		if(toAdd == null){
 			System.out.println("No such movie!");
@@ -106,6 +102,10 @@ public class User implements IUser{
 		}
 		watchList.add(toAdd);
 		return true;
+	}
+	
+	public HashSet<Movie> getWatchList(){
+		return this.watchList;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 
+import model.dao.MovieDAO;
 import model.exceptions.InvalidMovieException;
 
 public class Movie {
@@ -14,7 +15,7 @@ public class Movie {
 	private String name;
 	private String poster;
 	private HashSet<String> genre; //can have more then 1
-	private int voters = 1000;
+	private int voters = 100;
 	private double rating;
 	private HashSet<Actor> actors;
 	private HashSet<Director> directors;
@@ -90,6 +91,7 @@ public class Movie {
 		ratingAvr += vote;
 		this.voters++;
 		rating = ratingAvr / voters;
+		MovieDAO.getInstance().updateRating(this.name, this.rating);
 		return true;
 	}
 	

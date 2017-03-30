@@ -24,7 +24,7 @@ public class PostDAO {
 	public synchronized void addPost(String movieName){
 		MovieDAO md = MovieDAO.getInstance();
 		if (!md.allMovies().containsKey(movieName)) {
-			md.addMovie(movieName);
+			return;
 		}
 		Movie movie = md.allMovies().get(movieName);
 		
@@ -56,6 +56,7 @@ public class PostDAO {
 	}
 	
 	public synchronized void addComment(String movieName, long userId, String content){
+		System.out.println(movieName + " " + userId + " " + content);
 		MovieDAO md = MovieDAO.getInstance();
 		if (!md.allMovies().containsKey(movieName)) {
 			return;
@@ -131,19 +132,59 @@ public class PostDAO {
 		}
 		//Get all comments
 		try{
-			String query = "SELECT Content FROM imdb.imdb_comment WHERE id in (SELECT comment_id FROM imdb.imdb_comment_post WHERE post_id = ?)";
+			String query = "SELECT Content, User_id FROM imdb.imdb_comment WHERE id in (SELECT comment_id FROM imdb.imdb_comment_post WHERE post_id = ?)";
 			stmt = imdb.getInstance().getConnection().prepareStatement(query);
 			stmt.setLong(1, postId);
 			stmt.executeQuery();
 			ResultSet rSet = stmt.getResultSet();
 			while(rSet.next()){
 				String comment = rSet.getString("Content");
-				comments.add(comment);
+				long userId = rSet.getLong("User_id");
+				query = "SELECT name FROM imdb.imdb_user WHERE id = " + userId;
+				stmt = imdb.getInstance().getConnection().prepareStatement(query);
+				stmt.executeQuery();
+				ResultSet rs = stmt.getResultSet();
+				String userComment = null;
+				while(rs.next()){
+					String name = rs.getString("name");
+					userComment = name + " : " + comment;
+				}
+				comments.add(userComment);
 			}
 		} catch(SQLException ex){
 			System.out.println("PostDAO -> get comments: " + ex);
 		}
 		return comments;
 	}
-
+	
+	public boolean hasPost(String movieName){
+		MovieDAO md = MovieDAO.getInstance();
+		if (!md.allMovies().containsKey(movieName)) {
+			return false;
+		}
+		Movie movie = md.allMovies().get(movieName);
+		
+		IMDbConnect imdb = IMDbConnect.getInstance();
+		PreparedStatement stmt;
+		long postId = 0l;
+		
+		//Get postId
+		try{
+			String query = "SELECT Post_id FROM imdb.imdb_movie_post WHERE Movie_id = ?";
+			stmt = imdb.getInstance().getConnection().prepareStatement(query);
+			stmt.setLong(1, movie.getId());
+			stmt.executeQuery();
+			ResultSet rSet = stmt.getResultSet();
+			while(rSet.next()){
+				postId = rSet.getLong("Post_id");
+			}
+		} catch(SQLException ex){
+			System.out.println("PostDAO -> get Post ID: " + ex);
+		}
+		if (postId == 0) {
+			return false;
+		}
+		return true;
+	}
+	
 }

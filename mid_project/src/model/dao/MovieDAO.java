@@ -311,7 +311,7 @@ public class MovieDAO {
 	}
 	
 	private void selectionSort(List<Movie> movies){
-		int sortMovieCount = 16;
+		int sortMovieCount = 11;
 		if(movies.size() <= sortMovieCount){
 			sortMovieCount = movies.size() - 1;
 		}
@@ -329,13 +329,26 @@ public class MovieDAO {
 			n++;
 		}
 	}
+
+	public synchronized void updateRating(String movieName, double movieRating){
+		String query = "UPDATE imdb_movie SET rating = ? WHERE name=?";
+		PreparedStatement stmt = null;
+		try {
+			stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
+			stmt.setDouble(1, movieRating);
+			stmt.setString(2, movieName);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("updateRating: " + e.getMessage());
+		}
+	}
 	
 	public List<Movie> topTenRated(){
 		List<Movie> toSort = new ArrayList<>(allMovies.values());
 		selectionSort(toSort);
 		// remove the most rated movie because we already show this movie at the most rated movie field
 		toSort.remove(0);
-		return toSort;
+		return toSort.subList(0, 10);
 	}
 	
 }

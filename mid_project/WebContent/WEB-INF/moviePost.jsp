@@ -51,7 +51,7 @@
 				}%>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <%= movie.getDate() %>
 				
 			<p>Description : <%= movie.getDescription() %>
-			<p>Rating: <%= movie.getRating() %>
+			<p>Rating: <%= String.format("%.2f", movie.getRating()) %>
 			<p>Actors: <%
 				for(Actor actor : movie.getActors()){
 					out.print(actor.getName() + " ");
@@ -65,16 +65,17 @@
 		</div>
 	<%} %>
 	</div>
-	<div class="container">
+	<% if(session.getAttribute("logged") != null && (Boolean) session.getAttribute("logged")){ %>
+		<div class="container">
 		<div class="col-md-2">
 			<form action="addWatchList" method="post">
 				<input type="hidden" value="<%=movie.getName() %>" name="movieName">
-				<input class="btn btn-default" type="button" value="Add to Watchlist">
+				<input class="btn btn-default" type="submit" value="Add to Watchlist">
 			</form>
 		</div>
 		<div id="vote" class="col-md-3">
 			<form action="voteMovie" method="post">
-				<select id="select-vote" name="item">
+				<select id="select-vote" name="vote-select">
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -86,6 +87,7 @@
 					<option value="9">9</option>
 					<option value="10">10</option>
 				</select>
+				<input type="hidden" name="movie-name" value="<%= movie.getName() %>">
 				<input class="btn btn-default" type="submit" value="Vote">
 			</form>
 		</div>
@@ -95,14 +97,15 @@
 		<%
 		for(String comment : PostDAO.getInstance().getComments(movie.getName())){
 		%>
-			
 			<div><%=comment %></div>
 		<%
 		}
 		%>
 	<form action="comment" method="post">
 		<textarea name="commentar" rows="3" cols="120"></textarea>
-		<input type="submit	" value="Comment">
-	</>
+		<input type="hidden" name="movieName" value="<%= movie.getName() %>">
+		<input class="btn btn-default" type="submit" value="Comment">
+	</>		
+	<% } %>
 </body>
 </html>

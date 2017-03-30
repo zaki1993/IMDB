@@ -18,19 +18,7 @@ import model.user.User;
  */
 @WebServlet("/addmovie")
 public class AddMovieServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**-
-     * @see HttpServlet#HttpServlet()s
-     */
-    public AddMovieServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	doPost(req, resp);
-    }
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

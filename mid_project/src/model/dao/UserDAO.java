@@ -7,9 +7,11 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import model.exceptions.InvalidUserException;
+import model.movie.Movie;
 import model.user.User;
 import model.user.User.role;
 
@@ -33,9 +35,29 @@ public class UserDAO{
 						String location = rs.getString("location");
 						String password = rs.getString("password");
 						long id = rs.getLong("id");
+						String movieName = null;
+						HashSet<Movie> movies = new HashSet<>();
+						//Get movies
+						try{
+							query = "SELECT M.name, UM.Movie_id FROM imdb.imdb_user_movie UM JOIN imdb.imdb_movie M ON Movie_id = id WHERE User_id = ?";
+							stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
+							stmt.setLong(1, id);
+							stmt.executeQuery();
+							ResultSet rSet = stmt.getResultSet();
+							while(rSet.next()){
+								movieName = rSet.getString("name");
+								Movie m = MovieDAO.getInstance().allMovies().get(movieName);
+								movies.add(m);
+							}
+						} catch(SQLException ex){
+							System.out.println("PostDAO -> get Post ID: " + ex);
+						}
 						try {
 							newUser = new User(name, age, location, password);
 							newUser.setId(id);
+							for (Movie movie : movies) {
+								newUser.addToWatchList(movie);
+							}
 						} catch (InvalidUserException e) {
 							System.out.println("Almost sure it wont throw here!");
 						}
@@ -90,6 +112,8 @@ public class UserDAO{
 	public void addMovieToUser(User user, String movie){
 		String query = "INSERT IGNORE INTO imdb_user_movie(User_id, Movie_id) VALUES(?, ?)";
 		PreparedStatement stmt = null;
+		Movie m = MovieDAO.getInstance().allMovies().get(movie);
+		user.addToWatchList(m);
 		try {
 			stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
 			stmt.setLong(1, user.getId());

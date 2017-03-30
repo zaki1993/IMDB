@@ -25,11 +25,21 @@
 		<div id="tops" class="container">
 			<div id="top-rated" class="col-md-5">
 				<h1 style=""> TOP RATED </h1>
-				<a href="#"><img src="<%= mostRatedPoster %>"></a>
+				<form id="my-form" action="search" method="post">
+					<input type="hidden" name="movie-name" value="<%=mostRated.getName()%>">
+					<a href="#" onclick="document.getElementById('my-form').submit();">
+						<img src="<%= mostRatedPoster %>">
+					</a>
+				</form>
 			</div>
 			<div id="most-commented" class="col-md-5">
 				<h1 style=""> MOST COMMENTED </h1>
-				<a href="#"><img src="<%= mostCommentedPoster %>"></a>
+				<form id="my-form1" action="search" method="post">
+					<input type="hidden" name="movie-name" value="<%=mostCommented.getName()%>">
+					<a href="#" onclick="document.getElementById('my-form1').submit();">
+						<img src="<%= mostCommentedPoster %>">
+					</a>
+				</form>
 			</div>
 		</div>
 		<div id="top-ten-rated">
@@ -45,7 +55,14 @@
 						out.println("<tr>");
 					}
 					out.println("<td>");
-					out.println("<a href=\"#\"><img src=\""+ i.getPoster() + "\"></a>");
+					%>
+						<form id="my-form<%=n+10 %>" action="search" method="post">
+						<input type="hidden" name="movie-name" value="<%=i.getName()%>">
+						<a href="#" onclick="document.getElementById('my-form<%=n+10 %>').submit();">
+							<img src="<%= i.getPoster() %>">
+						</a>
+						</form>
+					<%
 					out.println("</td>");
 					n++;
 				}

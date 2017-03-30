@@ -61,6 +61,7 @@
 							 <% if(status != null && status.equals("ADMIN")) {
 									// put admin functionality here
 									try { %>
+									<li><a id="watchlist">View watchlist</a></li>
 									<li><a id="add-movie">Add Movie</a></li>
 									<%	
 										} catch (IOException e) {
@@ -73,7 +74,7 @@
 						<% if(status != null && status.equals("USER")) {
 							// put user functionality here
 								try { %>
-									<li><form action="addWatchList"><button  id="add-movie" type="submit" >View watchlist</button></form></li>
+									<li><a id="watchlist">View watchlist</a></li>
 								<% 
 									} catch (IOException e) {
 										// in case of error redirect to logout -> home
@@ -151,6 +152,26 @@
 						<input type="text" name="movie-name" placeholder="Movie name" class="text ui-widget-content ui-corner-all">
 						<input class="btn btn-primary btn-sm col-md-5" type="submit" value="Create post"></input>
 					</form>
+				</div>
+			<%
+			}
+			%>
+			<% if(status != null && (status.equals("USER") || status.equals("ADMIN"))){ %>
+				//<!-- Create new post field -->
+				<div id="dialog-form2" class="popup" title="Watchlist!">
+				<% 
+					int n = 0;
+					for(Movie i : user.getWatchList()){
+				%>
+					<form id="my-form<%=n+100 %>" action="search" method="post">
+						<input type="hidden" name="movie-name" value="<%=i.getName()%>">
+						<a href="#" onclick="document.getElementById('my-form<%=n+100 %>').submit();">
+							<p><%=i.getName() %>
+						</a>
+					</form>
+				<%		n++;
+					}
+				%>
 				</div>
 			<%
 			}

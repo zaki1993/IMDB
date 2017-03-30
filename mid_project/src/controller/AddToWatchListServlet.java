@@ -18,6 +18,10 @@ import model.user.User;
  */
 @WebServlet("/addWatchList")
 public class AddToWatchListServlet extends HttpServlet {
+	
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

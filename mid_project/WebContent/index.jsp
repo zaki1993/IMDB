@@ -165,6 +165,19 @@
 		      dialog.dialog( "open" );
 		    });
 		  } );
+	  
+	  $( function() {
+		    var dialog = $( "#dialog-form2" ).dialog({
+		      autoOpen: false,
+		      height: 350,
+		      width: 300,
+		      modal: true
+		    });
+		 
+		    $( "#watchlist" ).button().on( "click", function() {
+		      dialog.dialog( "open" );
+		    });
+		  } );
 	</script>
 </body>
 </html>

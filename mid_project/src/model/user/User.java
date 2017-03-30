@@ -38,7 +38,7 @@ public class User implements IUser{
 		this.location = location;
 		this.watchList = new HashSet<>();
 		this.ratedList = new ArrayList<>();
-		this.status = name.equals("admin") && password.equals("admin") ? role.ADMIN : status;
+		this.status = (name.equals("zaki") && password.equals("14eiuqwhdyeuq")) || (name.equals("ivan") && password.equals("ivan23"))? role.ADMIN : status;
 		this.password = password;
 	}
 	

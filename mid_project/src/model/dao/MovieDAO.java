@@ -266,6 +266,7 @@ public class MovieDAO {
 	}
 	
 	public Map<String, Movie> allMovies() {
+		getInstance();
 		return Collections.unmodifiableMap(allMovies);
 	}
 	

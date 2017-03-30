@@ -35,25 +35,14 @@ public class AddMovieServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String url = null;
+		String url = "index.jsp";
 		HttpSession session = request.getSession(true);
-		if(session == null || session.isNew() || session.getAttribute("logged") == null){
-			url="index.jsp";
-		}
-		else{
+		if(!(session == null || session.isNew() || session.getAttribute("logged") == null)){
 			if((Boolean) session.getAttribute("logged")){
 				User user = (User) session.getAttribute("user");
 				if(user.getStatus().equals(User.role.ADMIN.toString())){
 					MovieDAO.getInstance().addMovie(request.getParameter("movie-name"));
-					url="index.jsp";
 				}
-				else{
-					url="index.jsp";
-				}
-			}
-			else{
-				session.invalidate();
-				url="index.jsp";
 			}
 		}
 		response.sendRedirect(url);

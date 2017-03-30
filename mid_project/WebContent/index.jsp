@@ -110,8 +110,6 @@
 	 		// if someone tries to call this file without permission then also redirect (TODO)
  			valid = false;
  		}
- 	%>
- 	<% 
 	 	User user = (User) session.getAttribute("user");
  		if(user == null){
 	 		valid = false;

@@ -46,8 +46,12 @@ public class RegisterServlet extends HttpServlet {
 		String location = request.getParameter("location");		
 		try{
 			User newUser = new User(user, (byte) Integer.parseInt(age), location, password);
-			UserDAO.getInstance().addUser(newUser);
-			response.sendRedirect("registered.html");
+			if(UserDAO.getInstance().addUser(newUser)){
+				response.sendRedirect("registered.html");
+			}
+			else{
+				response.sendRedirect("index.jsp");
+			}
 		} catch(InvalidUserException | IOException ex){
 			try {
 				response.sendRedirect("index.jsp");

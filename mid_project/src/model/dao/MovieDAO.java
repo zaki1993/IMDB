@@ -106,6 +106,9 @@ public class MovieDAO {
 	}
 	
 	public synchronized void addMovie(String name){
+		if(allMovies.containsKey(name)){
+			return;
+		}
 		String[] names = name.split(" ");
 		StringBuilder link = new StringBuilder("http://www.omdbapi.com/?t=");
 		for (int i = 0; i < names.length; i++) {

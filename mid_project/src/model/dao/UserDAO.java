@@ -46,9 +46,11 @@ public class UserDAO{
 		return instance;
 	}
 	
-	public synchronized void addUser(User toAdd){
+	public synchronized boolean addUser(User toAdd){
+		if(allUsers.containsKey(toAdd.getName())){
+			return false;
+		}
 		// add to db
-		System.out.println(getAllUsers().toString());
 		try {
 			String query = "INSERT INTO `imdb_user`(`name`, `password`, `age`, `location`, `Status_id`) VALUES (?, ?, ?, ?, ?)";
 			PreparedStatement stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
@@ -60,8 +62,10 @@ public class UserDAO{
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("UserDao: " + e.getMessage());
+			return false;
 		} 
 		allUsers.put(toAdd.getName(), toAdd);
+		return true;
 	}
 	
 	public Map<String, User> getAllUsers(){

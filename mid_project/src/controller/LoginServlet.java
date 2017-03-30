@@ -58,6 +58,8 @@ public class LoginServlet extends HttpServlet {
 				response.setDateHeader("Expires", 0);
 				response.setHeader("Cache-Control", "no-cache");
 				try {
+					session.setAttribute("home", true);
+					session.setAttribute("post", false);
 					response.sendRedirect("index.jsp");
 				} catch (IOException e) {
 					System.out.println("Could not redirect to index.jsp: " + e.getMessage());
@@ -70,6 +72,10 @@ public class LoginServlet extends HttpServlet {
 			// redirect to home page
             PrintWriter out = null;
 			try {
+				HttpSession session = request.getSession();
+				session.setMaxInactiveInterval(60*2); // set session time 30 seconds
+				session.setAttribute("home", true);
+				session.setAttribute("post", false);
 				out = response.getWriter();
 	            out.println("<script> alert(\"Please make sure you enter a valid username or password.\") </script>");
 	            out.println("<script> window.location = 'http://localhost:8080/mid_project/index.jsp' </script>");

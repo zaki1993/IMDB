@@ -47,6 +47,7 @@ public class SearchServlet extends HttpServlet {
 			Movie toSearch = MovieDAO.getInstance().allMovies().get(movieName);
 			session.setAttribute("movie", toSearch);
 		}
+		session.setAttribute("post", true);
 		response.sendRedirect("moviePost.jsp");
 	}
 

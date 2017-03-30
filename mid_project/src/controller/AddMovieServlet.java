@@ -45,6 +45,8 @@ public class AddMovieServlet extends HttpServlet {
 				}
 			}
 		}
+		session.setAttribute("home", true);
+		session.setAttribute("post", false);
 		response.sendRedirect(url);
 	}
 

@@ -103,12 +103,31 @@
 <title>IMDB</title>
 </head>
 <body>
+	<%
+		boolean home = false;
+		boolean post = false;
+		if((Boolean) session.getAttribute("home") == null){
+			home = true;
+		}
+		else{
+			home = (Boolean) session.getAttribute("home");
+		}
+		
+		if((Boolean) session.getAttribute("post") == null){
+			post = false;
+		}
+		else{
+			post = (Boolean) session.getAttribute("post");
+		}
+	%>
 	<div class="container">
 	  <div class="row justify-content-md-center maincontainer">
 	    <div class="col-10 col-md-auto">
 	       <div class="mainbody">
 			<jsp:include page="/WEB-INF/navbar.jsp" /> 
-			<jsp:include page="/WEB-INF/main.jsp" /> 
+			<% if(home){ %>
+				<jsp:include page="/WEB-INF/main.jsp" /> 
+			<% } %>
 		   </div>
 	    </div>
 	  </div>

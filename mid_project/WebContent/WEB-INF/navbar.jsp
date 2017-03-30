@@ -61,7 +61,6 @@
 							 <% if(status != null && status.equals("ADMIN")) {
 									// put admin functionality here
 									try { %>
-									<li><a id="create-post">Create post</a></li>
 									<li><a id="add-movie">Add Movie</a></li>
 									<%	
 										} catch (IOException e) {
@@ -74,8 +73,7 @@
 						<% if(status != null && status.equals("USER")) {
 							// put user functionality here
 								try { %>
-									<li><a>Rate Movie</a></li>
-									<li><a>Comment Post</a></li>
+									<li><form action="addWatchList"><button  id="add-movie" type="submit" >View watchlist</button></form></li>
 								<% 
 									} catch (IOException e) {
 										// in case of error redirect to logout -> home

@@ -166,7 +166,7 @@
 					<form id="my-form<%=n+100 %>" action="search" method="post">
 						<input type="hidden" name="movie-name" value="<%=i.getName()%>">
 						<a href="#" onclick="document.getElementById('my-form<%=n+100 %>').submit();">
-							<p><%=i.getName() %>
+							<b><p><%=i.getName() %></p></b>
 						</a>
 					</form>
 				<%		n++;

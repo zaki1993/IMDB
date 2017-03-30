@@ -30,7 +30,7 @@ public class User implements IUser{
 	// we need this constructor, because only the ADMIN can create users with roles
 	// make the constructor protected so we can call it only from the classes that inherit this class
 	private User(String name, byte age, String location, int status, String password) throws InvalidUserException{
-		if(name == null || name.isEmpty() || location == null || location.isEmpty() || age < 0){
+		if(name == null || name.isEmpty() || location == null || location.isEmpty() || age < 0 || name.contains(" ")){
 			throw new InvalidUserException();
 		}
 		this.name = name;

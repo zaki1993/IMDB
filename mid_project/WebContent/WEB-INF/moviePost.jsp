@@ -9,25 +9,46 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Movie post</title>
+<style>
+	body{
+		margin: 0 auto;
+		padding: 0 auto;
+	}
+	
+	#vote{
+		margin-left: -20px;
+	}
+	
+	#select-vote{
+		border-style: solid;
+		border-color: black;
+		width: 50px;
+	}
+	
+</style>
 </head>
-<% Movie movie = (Movie) request.getAttribute("movie"); %>
 <body>
-	<div>
 	<%
-	if(movie == null){
-		out.print("<h2>There is no such movie in here.</h2>");
-		out.print("<h4>Check your spelling maybe?</h4>");
-	}else{
+		Movie movie = null;
+		if(session.getAttribute("movie") == null){
+			out.print("<h2>There is no such movie in here.</h2>");
+			out.print("<h4>Check your spelling maybe?</h4>");
+			session.setAttribute("home", true);
+			session.setAttribute("post", false);
+			return;
+		}else{
+			movie = (Movie) session.getAttribute("movie");
 	%>
-		<div>			
+	<div class="container">
+		<div class="col-md-4">			
 			<a href="#"><img src="<%= movie.getPoster() %>"></a>
 		</div>
-		<div>
+		<div class="col-md-5">
 			<h2><%= movie.getName() %></h2>
 			<p><%
 				for(String genre : movie.getGenre()){
 					out.print(genre + " ");
-				}%>    <%= movie.getDate() %>
+				}%>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <%= movie.getDate() %>
 				
 			<p>Description : <%= movie.getDescription() %>
 			<p>Rating: <%= movie.getRating() %>
@@ -44,16 +65,16 @@
 		</div>
 	<%} %>
 	</div>
-	<div>
-		<div>
+	<div class="container">
+		<div class="col-md-2">
 			<form action="addWatchList" method="post">
 				<input type="hidden" value="<%=movie.getName() %>" name="movieName">
-				<input type="button" value="Add to Watchlist">
+				<input class="btn btn-default" type="button" value="Add to Watchlist">
 			</form>
 		</div>
-		<div>
+		<div id="vote" class="col-md-3">
 			<form action="voteMovie" method="post">
-				<select name="item">
+				<select id="select-vote" name="item">
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -65,19 +86,23 @@
 					<option value="9">9</option>
 					<option value="10">10</option>
 				</select>
-				<input type="submit" value="Submit">
-				<input type="button" value="Vote">
+				<input class="btn btn-default" type="submit" value="Vote">
 			</form>
 		</div>
 	</div>
+	<br>
 	<div>
 		<%
 		for(String comment : PostDAO.getInstance().getComments(movie.getName())){
 		%>
+			
 			<div><%=comment %></div>
 		<%
 		}
 		%>
-	</div>
+	<form action="comment" method="post">
+		<textarea name="commentar" rows="3" cols="120"></textarea>
+		<input type="submit	" value="Comment">
+	</>
 </body>
 </html>

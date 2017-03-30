@@ -6,22 +6,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import model.dao.MovieDAO;
-import model.movie.Movie;
 
 /**
- * Servlet implementation class SearchServlet
+ * Servlet implementation class CommentServlet
  */
-@WebServlet("/search")
-public class SearchServlet extends HttpServlet {
+@WebServlet("/CommentServlet")
+public class CommentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SearchServlet() {
+    public CommentServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,26 +27,15 @@ public class SearchServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doPost(request, response);
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String movieName = request.getParameter("movie-name");
-		//System.out.println(MovieDAO.getInstance().allMovies());
-		HttpSession session = request.getSession();
-		if(!MovieDAO.getInstance().allMovies().containsKey(movieName)){
-			session.setAttribute("movie", null);
-		}
-		else{
-			Movie toSearch = MovieDAO.getInstance().allMovies().get(movieName);
-			session.setAttribute("movie", toSearch);
-		}
-		session.setAttribute("home", false);
-		session.setAttribute("post", true);
-		response.sendRedirect("index.jsp");
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }

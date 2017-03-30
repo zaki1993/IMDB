@@ -1,3 +1,4 @@
+<%@page import="model.dao.Request"%>
 <%@page import="java.io.IOException"%>
 <%@page import="java.io.PrintWriter"%>
 <%@page import="model.dao.UserDAO"%>
@@ -40,10 +41,10 @@
 		      <span class="icon-bar"></span>
 		      <span class="icon-bar"></span>
 		    </button>
-		    <a class="navbar-brand" href="#">IMDB</a>
-		    <form class="navbar-form navbar-left" role="search">
+		    <a class="navbar-brand" href="index.jsp"><% session.setAttribute("home", true); session.setAttribute("post", false); %>IMDB</a>
+		    <form action="search" method="post" class="navbar-form navbar-left" role="search">
 		      <div class="form-group">
-		        <input class="form-control" placeholder="Search" type="text">
+		        <input class="form-control" name="movie-name" placeholder="Search" type="text">
 		      </div>
 		      <button type="submit" class="btn btn-default">Search</button>
 		    </form>

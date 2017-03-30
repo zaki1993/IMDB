@@ -59,7 +59,7 @@ public class Movie {
 	}
 
 	public HashSet<String> getGenre() {
-		return (HashSet<String>) Collections.unmodifiableCollection(this.genre);
+		return this.genre;
 	}
 
 	public double getRating() {
@@ -67,7 +67,7 @@ public class Movie {
 	}
 
 	public HashSet<Actor> getActors() {
-		return (HashSet<Actor>) Collections.unmodifiableCollection(this.actors);
+		return this.actors;
 	}
 
 	public HashSet<Director> getDirectors() {

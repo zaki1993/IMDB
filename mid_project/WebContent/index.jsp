@@ -104,7 +104,7 @@
 </head>
 <body>
 	<%
-		boolean home = false;
+		boolean home = true;
 		boolean post = false;
 		if((Boolean) session.getAttribute("home") == null){
 			home = true;
@@ -125,8 +125,10 @@
 	    <div class="col-10 col-md-auto">
 	       <div class="mainbody">
 			<jsp:include page="/WEB-INF/navbar.jsp" /> 
-			<% if(home){ %>
+			<% if(home && !post){ %>
 				<jsp:include page="/WEB-INF/main.jsp" /> 
+			<% } else if(post){ %>
+				<jsp:include page="/WEB-INF/moviePost.jsp" />
 			<% } %>
 		   </div>
 	    </div>

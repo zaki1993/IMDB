@@ -151,7 +151,7 @@
 			<div id="comment-section" class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">Comment section</div>
-		  			<div class="panel-body" style="max-height: 250px;overflow-y: scroll;">
+		  			<div class="panel-body" style="max-height: 250px;min-height: 250px;overflow-y: scroll;">
 						<%
 						for(String comment : PostDAO.getInstance().getComments(movie.getName())){
 							String user = comment.substring(0, comment.indexOf(": "));

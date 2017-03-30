@@ -26,7 +26,7 @@
 		
 		.mainbody{
 			background-color: white;
-			height: 120vh;
+			height: 125vh;
 		}
 		
 	    #dialog-form1: label, input, #dialog-form2: label, input {
@@ -77,7 +77,7 @@
 		}
 		
 		#top-ten-rated{
-			background-color: gray;
+			background-color: gray;			
 		}
 		
 		#top-ten-rated table td{
@@ -88,7 +88,7 @@
 		
 		#top-ten-rated table img {
 			background-position: center center;
-	  			background-size: cover;
+	  		background-size: cover;
 			max-width: 150px;
 			width: auto;
 			height: auto;

@@ -42,7 +42,7 @@
 				</form>
 			</div>
 		</div>
-		<div id="top-ten-rated">
+		<div id="top-ten-rated" style="min-height: 610px;padding-top: 40px;">
 			<!-- random generated 10 movie posters -->
 			<%
 				List<Movie> topTenRated = MovieDAO.getInstance().topTenRated();

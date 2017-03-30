@@ -59,31 +59,64 @@
 			movie = (Movie) session.getAttribute("movie");
 			session.setAttribute("home", false);
 			session.setAttribute("post", true);
+			int count = 0;
 	%>
-	<div class="container">
-		<div class="col-md-4">			
-			<img src="<%= movie.getPoster() %>">
+	<div class="jumbotron">
+		<div class="container-fluid">
+			<div class="col-xs-5">			
+				<img src="<%= movie.getPoster() %>">
+			</div>
+			<div class="col-xs-7">
+				<h2><%= movie.getName() %></h2>
+				<p>
+					<% if(!(movie.getGenre() == null || movie.getGenre().isEmpty())){ %>
+						<b>Genres: </b>
+							<%
+								count = 0;
+								for(String genre : movie.getGenre()){
+									out.print(genre + " ");
+									if(count < movie.getGenre().size() - 1){
+										out.print(", ");
+									}
+									count++;
+								}
+							%>	
+						<br>
+					<% } %>
+					<% if(!(movie.getDate() == null || movie.getDate().isEmpty())){ %>
+						<b>Release: </b> <%= movie.getDate() %>
+						<br>
+					<% } %>
+					<b>Description:</b> <%= movie.getDescription() %>
+					<br>
+					<b>Rating:</b> <%= String.format("%.2f", movie.getRating()) %>
+					<br>
+					<b>Actors:</b>
+						 <%
+						 	count = 0;
+							for(Actor actor : movie.getActors()){
+								out.print(actor.getName() + " ");
+								if(count < movie.getActors().size() - 1){
+									out.print(", ");
+								}
+								count++;
+							}
+						%>
+					<br>
+					<b>Directors:</b> 
+						<%
+							count = 0;
+							for(Director director : movie.getDirectors()){
+								out.print(director.getName() + " ");
+								if(count < movie.getDirectors().size() - 1){
+									out.print(", ");
+								}
+								count++;
+							}
+						%>
+				</p>
 		</div>
-		<div class="col-md-5">
-			<h2><%= movie.getName() %></h2>
-			<p><%
-				for(String genre : movie.getGenre()){
-					out.print(genre + " ");
-				}%>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <%= movie.getDate() %>
-				
-			<p>Description : <%= movie.getDescription() %>
-			<p>Rating: <%= String.format("%.2f", movie.getRating()) %>
-			<p>Actors: <%
-				for(Actor actor : movie.getActors()){
-					out.print(actor.getName() + " ");
-				}
-			%>
-			<p>Directors: <%
-				for(Director director : movie.getDirectors()){
-					out.print(director.getName() + " ");
-				}
-			%>
-		</div>
+	</div>
 	<%} %>
 	</div>
 	<% if(session.getAttribute("logged") != null && (Boolean) session.getAttribute("logged")){ %>

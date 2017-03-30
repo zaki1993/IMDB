@@ -13,9 +13,8 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="styles/style.css">
-		
-	  <style>
+	<link rel="stylesheet" type="text/css" href="styles/style.css">	
+	<style>
 	  	body{
 			background-color: lightgray;
 		}
@@ -27,7 +26,7 @@
 		
 		.mainbody{
 			background-color: white;
-			height: 100vh;
+			height: 115vh;
 		}
 		
 	    #dialog-form1: label, input, #dialog-form2: label, input {
@@ -89,7 +88,7 @@
 		
 		#top-ten-rated table img {
 			background-position: center center;
-   			background-size: cover;
+	  			background-size: cover;
 			max-width: 150px;
 			width: auto;
 			height: auto;
@@ -102,7 +101,6 @@
 			max-width: 350px;
 			max-height: 350px;
 		}
-		
 	</style>
 <title>IMDB</title>
 </head>

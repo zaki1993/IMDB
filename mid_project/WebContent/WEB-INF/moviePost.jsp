@@ -57,10 +57,12 @@
 			return;
 		}else{
 			movie = (Movie) session.getAttribute("movie");
+			session.setAttribute("home", false);
+			session.setAttribute("post", true);
 	%>
 	<div class="container">
 		<div class="col-md-4">			
-			<a href="#"><img src="<%= movie.getPoster() %>"></a>
+			<img src="<%= movie.getPoster() %>">
 		</div>
 		<div class="col-md-5">
 			<h2><%= movie.getName() %></h2>
@@ -116,7 +118,7 @@
 			<div id="comment-section" class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">Comment section</div>
-		  			<div class="panel-body">
+		  			<div class="panel-body" style="max-height: 250px;overflow-y: scroll;">
 						<%
 						for(String comment : PostDAO.getInstance().getComments(movie.getName())){
 							String user = comment.substring(0, comment.indexOf(": "));

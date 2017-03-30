@@ -98,6 +98,10 @@
 			margin-bottom: 20px;
 			margin-top: 20px;
 		}
+		#dialog-form2{
+			max-width: 350px;
+			max-height: 350px;
+		}
 		
 	</style>
 <title>IMDB</title>
@@ -169,8 +173,9 @@
 	  $( function() {
 		    var dialog = $( "#dialog-form2" ).dialog({
 		      autoOpen: false,
+		      resizable: false,
 		      height: 350,
-		      width: 300,
+		      width: 350,
 		      modal: true
 		    });
 		 

@@ -18,7 +18,12 @@ import model.user.User;
  */
 @WebServlet("/addmovie")
 public class AddMovieServlet extends HttpServlet {
-
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(req, resp);
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

@@ -28,7 +28,7 @@ public class RegisterServlet extends HttpServlet {
 		String age = request.getParameter("age");
 		String location = request.getParameter("location");		
 		try{
-			User newUser = new User(user, (byte) Integer.parseInt(age), location, password);
+			User newUser = new User(user, (byte) Integer.parseInt(age), location, password, 2);
 			if(UserDAO.getInstance().addUser(newUser)){
 				response.sendRedirect("registered.html");
 			}

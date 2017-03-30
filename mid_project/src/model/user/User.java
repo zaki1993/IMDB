@@ -29,7 +29,7 @@ public class User implements IUser{
 	
 	// we need this constructor, because only the ADMIN can create users with roles
 	// make the constructor protected so we can call it only from the classes that inherit this class
-	private User(String name, byte age, String location, role status, String password) throws InvalidUserException{
+	private User(String name, byte age, String location, int status, String password) throws InvalidUserException{
 		if(name == null || name.isEmpty() || location == null || location.isEmpty() || age < 0){
 			throw new InvalidUserException();
 		}
@@ -38,12 +38,12 @@ public class User implements IUser{
 		this.location = location;
 		this.watchList = new HashSet<>();
 		this.ratedList = new ArrayList<>();
-		this.status = (name.equals("zaki") && password.equals("14eiuqwhdyeuq")) || (name.equals("ivan") && password.equals("ivan23"))? role.ADMIN : status;
+		this.status = status == 1 ? role.ADMIN : role.USER;
 		this.password = password;
 	}
 	
-	public User(String name, byte age, String location, String password) throws InvalidUserException{
-		this(name, age, location, role.USER, password);
+	public User(String name, byte age, String location, String password, int status) throws InvalidUserException{
+		this(name, age, location, status , password);
 	}
 	
 	public static synchronized void createPost(Movie movie){

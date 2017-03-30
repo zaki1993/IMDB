@@ -24,7 +24,7 @@ public class UserDAO{
 		if(instance == null){
 			instance = new UserDAO();
 			if(allUsers.isEmpty()){
-				String query = "SELECT id, name, password, age, location FROM imdb_user";
+				String query = "SELECT id, name, password, age, location, Status_id FROM imdb_user";
 				try {
 					PreparedStatement stmt = IMDbConnect.getInstance().getConnection().prepareStatement(query);
 					ResultSet rs = stmt.executeQuery();
@@ -35,6 +35,7 @@ public class UserDAO{
 						String location = rs.getString("location");
 						String password = rs.getString("password");
 						long id = rs.getLong("id");
+						int status = rs.getInt("Status_id");
 						String movieName = null;
 						HashSet<Movie> movies = new HashSet<>();
 						//Get movies
@@ -53,7 +54,7 @@ public class UserDAO{
 							System.out.println("PostDAO -> get Post ID: " + ex);
 						}
 						try {
-							newUser = new User(name, age, location, password);
+							newUser = new User(name, age, location, password, status);
 							newUser.setId(id);
 							for (Movie movie : movies) {
 								newUser.addToWatchList(movie);

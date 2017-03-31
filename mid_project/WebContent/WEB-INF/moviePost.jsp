@@ -119,7 +119,7 @@
 	</div>
 	<%} %>
 	</div>
-	<% if(session.getAttribute("logged") != null && (Boolean) session.getAttribute("logged")){ %>
+	<% if(session.getAttribute("logged") != null && (Boolean) session.getAttribute("logged") && session.getAttribute("user") != null){ %>
 		<div id="main-container">
 			<div id="vote-section" class="container">
 				<div class="col-md-2">

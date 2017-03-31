@@ -69,11 +69,12 @@
 			<div class="col-xs-7">
 				<h2><%= movie.getName() %></h2>
 				<p>
-					<% if(!(movie.getGenre() == null || movie.getGenre().isEmpty())){ %>
+					<% if(!(movie.getGenre() == null || movie.getGenre().isEmpty() || movie.getGenre().toArray()[0].equals(""))){ %>
 						<b>Genres: </b>
 							<%
 								count = 0;
 								for(String genre : movie.getGenre()){
+									System.out.println(genre + "dddd");
 									out.print(genre);
 									if(count < movie.getGenre().size() - 1){
 										out.print(", ");

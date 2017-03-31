@@ -74,7 +74,7 @@
 							<%
 								count = 0;
 								for(String genre : movie.getGenre()){
-									out.print(genre + " ");
+									out.print(genre);
 									if(count < movie.getGenre().size() - 1){
 										out.print(", ");
 									}
@@ -95,7 +95,7 @@
 						 <%
 						 	count = 0;
 							for(Actor actor : movie.getActors()){
-								out.print(actor.getName() + " ");
+								out.print(actor.getName());
 								if(count < movie.getActors().size() - 1){
 									out.print(", ");
 								}
@@ -107,7 +107,7 @@
 						<%
 							count = 0;
 							for(Director director : movie.getDirectors()){
-								out.print(director.getName() + " ");
+								out.print(director.getName());
 								if(count < movie.getDirectors().size() - 1){
 									out.print(", ");
 								}

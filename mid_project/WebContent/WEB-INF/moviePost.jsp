@@ -74,7 +74,6 @@
 							<%
 								count = 0;
 								for(String genre : movie.getGenre()){
-									System.out.println(genre + "dddd");
 									out.print(genre);
 									if(count < movie.getGenre().size() - 1){
 										out.print(", ");

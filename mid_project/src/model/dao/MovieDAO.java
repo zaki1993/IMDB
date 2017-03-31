@@ -121,9 +121,6 @@ public class MovieDAO {
 		}
 		try {
 			String movieJson = Request.read(link.toString());
-			
-			System.out.println(movieJson);
-			
 			String rs = movieJson.substring(movieJson.indexOf("\"Response\":\""));			
 			if(rs.contains("False")){
 				throw new InvalidMovieException();
@@ -143,6 +140,7 @@ public class MovieDAO {
 					rating = "0";
 				}
 				try{
+					IMDbConnect.getInstance().getConnection().setAutoCommit(false);
 					String query = "INSERT IGNORE INTO `imdb_movie`(`poster`, `rating`, `description`, `date`, `name`) VALUES (?, ?, ?, ?, ?)";
 					stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 					stmt.setString(1, poster);
@@ -155,16 +153,31 @@ public class MovieDAO {
 					while(rSet.next()){
 						movieId = rSet.getLong(1);
 					}
+					IMDbConnect.getInstance().getConnection().commit();
 				} catch(SQLException ex){
 					// dublicate fields
 					// nothing to do
 					// we set them to be unique
 					System.out.println("Movie: " + ex);
+					try {
+						IMDbConnect.getInstance().getConnection().rollback();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						System.out.println("Fail pri rollbacka");
+					}
 				}
-				
+				finally{
+					try {
+						IMDbConnect.getInstance().getConnection().setAutoCommit(true);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				// add the director
 				String director = customGsonParser(movieJson, "Director");
 					try {
+						IMDbConnect.getInstance().getConnection().setAutoCommit(false);
 						long directorId = 0;
 						String query = "INSERT IGNORE INTO `imdb_director`(`name`) VALUES (?)";
 						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -181,20 +194,34 @@ public class MovieDAO {
 						stmt.setLong(1, directorId);
 						stmt.setLong(2, movieId);
 						stmt.executeUpdate();
-						
+						IMDbConnect.getInstance().getConnection().commit();
 					} catch (SQLException ex) {
 						// dublicate fields
 						// nothing to do
 						// we set them to be unique
 						System.out.println("Director: " + ex);
+						try {
+							IMDbConnect.getInstance().getConnection().rollback();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							System.out.println("Fail pri rollbacka");
+						}
 					}
-				
+					finally{
+						try {
+							IMDbConnect.getInstance().getConnection().setAutoCommit(true);
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				// add all the actors
 				String[] actors = customGsonParser(movieJson, "Actors").split(", ");
 				for(int i = 0; i < actors.length; i++){
 					try{
 						long actorId = 0;
 						String query = "INSERT IGNORE INTO `imdb_actor`(`name`) VALUES (?)";
+						IMDbConnect.getInstance().getConnection().setAutoCommit(false);
 						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 						stmt.setString(1, actors[i]);
 						stmt.executeUpdate();
@@ -209,13 +236,29 @@ public class MovieDAO {
 						stmt.setLong(1, actorId);
 						stmt.setLong(2, movieId);
 						stmt.executeUpdate();
+						IMDbConnect.getInstance().getConnection().commit();
 					} catch(SQLException ex){
 						// dublicate fields
 						// nothing to do
 						// we set them to be unique
 						System.out.println("Actor: " + ex);
+						try {
+							IMDbConnect.getInstance().getConnection().rollback();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							System.out.println("Fail pri rollbacka");
+						}
+					}
+					finally{
+						try {
+							IMDbConnect.getInstance().getConnection().setAutoCommit(true);
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
+				
 		
 				// add genres
 				String genre = customGsonParser(movieJson, "Genre");
@@ -224,6 +267,7 @@ public class MovieDAO {
 					try{
 						String genreName = null;
 						String query = "INSERT IGNORE INTO `imdb_genre`(`name`) VALUES (?)";
+						IMDbConnect.getInstance().getConnection().setAutoCommit(false);
 						stmt = imdb.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 						stmt.setString(1, genres[i]);
 						stmt.executeUpdate();
@@ -238,11 +282,26 @@ public class MovieDAO {
 						stmt.setString(1, genreName);
 						stmt.setLong(2, movieId);
 						stmt.executeUpdate();
+						IMDbConnect.getInstance().getConnection().commit();
 					} catch(SQLException ex){
 						// dublicate fields
 						// nothing to do
 						// we set them to be unique
 						System.out.println("Genre: " + ex);
+						try {
+							IMDbConnect.getInstance().getConnection().rollback();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							System.out.println("Fail pri rollbacka");
+						}
+					}
+					finally{
+						try {
+							IMDbConnect.getInstance().getConnection().setAutoCommit(true);
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 				ArrayList<String> genresArray = new ArrayList<>();

@@ -31,7 +31,7 @@
 		
 		.mainbody{
 			background-color: white;
-			height: 125vh;
+			height: 145vh;
 		}
 		
 	    #dialog-form1: label, input, #dialog-form2: label, input {

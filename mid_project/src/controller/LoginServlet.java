@@ -71,7 +71,7 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("post", false);
 				out = response.getWriter();
 	            out.println("<script> alert(\"Please make sure you enter a valid username or password.\") </script>");
-	            out.println("<script> window.location = 'http://localhost:8080/mid_project/index.jsp' </script>");
+	            out.println("<script> window.location = 'http://192.168.6.171:8080/mid_project/index.jsp' </script>");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

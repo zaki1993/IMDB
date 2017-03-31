@@ -12,15 +12,17 @@
 		padding: 0px;
 		background-color: #C0392B;
 	}
-	img{
-		width: 93%;
-		margin-left: 60px;
+	
+	div{
+		text-align: center;
+		vertical-align: middle;
+		line-height: 82vh;  
 	}
 </style>
 </head>
 <body>
 	<div>
-		<img src="images/error.jpg">
+		<h1> SORRY OUR FAULT</h1>
 	</div>
 </body>
 </html>

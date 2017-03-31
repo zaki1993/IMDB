@@ -57,10 +57,10 @@
 					out.println("<td>");
 					%>
 						<form id="my-form<%=n+10 %>" action="search" method="post">
-						<input type="hidden" name="movie-name" value="<%=i.getName()%>">
-						<a href="#" onclick="document.getElementById('my-form<%=n+10 %>').submit();">
-							<img src="<%= i.getPoster() %>">
-						</a>
+							<input type="hidden" name="movie-name" value="<%=i.getName()%>">
+							<a href="#" onclick="document.getElementById('my-form<%=n+10 %>').submit();">
+								<img src="<%= i.getPoster() %>">
+							</a>
 						</form>
 					<%
 					out.println("</td>");
